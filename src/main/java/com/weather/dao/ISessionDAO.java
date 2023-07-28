@@ -11,75 +11,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class ISessionDAO implements DAO<Session> {
+public class ISessionDAO implements SessionDAO {
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("postgres");
 
     @Override
-    public Optional<Session> get(UUID id) {
-        EntityManager entityManager = emf.createEntityManager();
-        entityManager.unwrap(org.hibernate.Session.class).setDefaultReadOnly(true);
-        entityManager.getTransaction().begin();
-        try {
-            Optional<Session> result = Optional.ofNullable(entityManager.find(Session.class, id));
-            entityManager.getTransaction().commit();
-            return result;
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-            throw new SessionDaoException(String.format("Cannot perform dao operation: get( %d )", id), e);
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    @Override
-    public List<Session> getAll() {
-        EntityManager entityManager = emf.createEntityManager();
-        entityManager.unwrap(org.hibernate.Session.class).setDefaultReadOnly(true);
-        entityManager.getTransaction().begin();
-        try {
-            var result = entityManager.createQuery("SELECT s FROM Session s", Session.class)
-                    .getResultList();
-            entityManager.getTransaction().commit();
-            return result;
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-            throw new SessionDaoException("Cannot perform dao operation: getAll()", e);
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    @Override
-    public void save(Session session) {
-        EntityManager entityManager = emf.createEntityManager();
-        entityManager.getTransaction().begin();
-        try {
-            entityManager.persist(session);
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-            throw new SessionDaoException(String.format("Cannot perform dao operation: save( %s )", session), e);
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    @Override
-    public void delete(Session session) {
-        EntityManager entityManager = emf.createEntityManager();
-        entityManager.getTransaction().begin();
-        try {
-            entityManager.remove(session);
-            entityManager.getTransaction().commit();
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-            throw new SessionDaoException(String.format("Cannot perform dao operation: delete( %s )", session), e);
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    public boolean isSessionExpiredForUser(User user) {
+    public boolean isSessionExpired(User user) {
         EntityManager entityManager = emf.createEntityManager();
         entityManager.getTransaction().begin();
         try {
@@ -94,6 +30,20 @@ public class ISessionDAO implements DAO<Session> {
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
             throw new SessionDaoException(String.format("Cannot perform isSessionExpiredForUser( %s )", user), e);
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public void save(Session session) {
+        EntityManager entityManager = emf.createEntityManager();
+        entityManager.getTransaction().begin();
+        try {
+            entityManager.persist(session);
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            throw new SessionDaoException(String.format("Cannot perform save( %s )", session), e);
         } finally {
             entityManager.close();
         }
