@@ -7,29 +7,27 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public class ISessionDAO implements SessionDAO {
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("postgres");
 
     @Override
-    public boolean isSessionExpired(User user) {
+    public Optional<Session> getSession(User user) {
         EntityManager entityManager = emf.createEntityManager();
         entityManager.getTransaction().begin();
         try {
-            Optional<Boolean> id = entityManager
-                    .createQuery("SELECT CASE WHEN s.expiresAt > NOW() THEN false ELSE true END AS is_expired " +
-                            "FROM Session s WHERE s.user.id =: id ORDER BY s.expiresAt DESC LIMIT 1", Boolean.class)
+            Optional<Session> session = entityManager
+                    .createQuery("SELECT s FROM Session s WHERE s.user.id =: id " +
+                            "ORDER BY s.expiresAt DESC LIMIT 1", Session.class)
                     .setParameter("id", user.getId())
                     .getResultStream()
                     .findAny();
             entityManager.getTransaction().commit();
-            return id.orElse(true);
+            return session;
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new SessionDaoException(String.format("Cannot perform isSessionExpiredForUser( %s )", user), e);
+            throw new SessionDaoException(String.format("Cannot perform getSession( %s )", user), e);
         } finally {
             entityManager.close();
         }

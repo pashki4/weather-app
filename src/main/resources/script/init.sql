@@ -33,6 +33,9 @@ CREATE TABLE IF NOT EXISTS locations
 INSERT INTO users(login, password)
 VALUES ('user-0', crypt('password', gen_salt('bf')));
 
+INSERT INTO sessions(user_id) VALUES(1);
+
+DROP TABLE users;
 SELECT id
 FROM users
 WHERE login = 'user-0'
