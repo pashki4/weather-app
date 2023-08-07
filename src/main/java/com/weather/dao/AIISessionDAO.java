@@ -2,14 +2,13 @@ package com.weather.dao;
 
 import com.weather.exception.SessionDaoException;
 import com.weather.model.Session;
-import com.weather.model.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.util.Optional;
 
-public class ISessionDAO implements SessionDAO {
+public class AIISessionDAO implements SessionDAO {
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("postgres");
 
     @Override

@@ -1,26 +1,27 @@
 package com.weather.service;
 
-import com.weather.dao.UserDAO;
+import com.weather.dao.IUserDAO;
 import com.weather.model.User;
 
 import java.util.Optional;
 
 public class UserService {
-    private final UserDAO userDAO;
+    private final IUserDAO IUserDAO;
 
-    public UserService(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public UserService(IUserDAO IUserDAO) {
+        this.IUserDAO = IUserDAO;
     }
 
     public Optional<User> getById(Long id) {
-        return userDAO.getById(id);
+        return IUserDAO.getById(id);
     }
 
     public Optional<User> getByLogin(String login) {
-        return userDAO.getByLogin(login);
+        return IUserDAO.getByLogin(login);
     }
 
-    public void save(User user) {
-        userDAO.save(user);
+    public User save(User user) {
+        return IUserDAO.save(user);
     }
+
 }
