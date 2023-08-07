@@ -39,7 +39,7 @@ public class RegistrationController extends HttpServlet {
                 SessionService sessionService = new SessionService(new ISessionDAO());
                 Optional<Session> session = sessionService.getSessionByUserId(id);
                 if (session.isPresent()) {
-                    isSessionExpired = isSessionExpired(session.get());
+                    isSessionExpired = checkSession(session.get());
                 }
             }
         }
@@ -55,7 +55,7 @@ public class RegistrationController extends HttpServlet {
         }
     }
 
-    private boolean isSessionExpired(Session session) {
+    private boolean checkSession(Session session) {
         return session.getExpiresAt().isBefore(LocalDateTime.now(ZoneId.of("UTC")));
     }
 
