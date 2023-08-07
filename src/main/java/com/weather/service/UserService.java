@@ -12,8 +12,12 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    public Optional<User> get(Long id) {
-        return userDAO.get(id);
+    public Optional<User> getById(Long id) {
+        return userDAO.getById(id);
+    }
+
+    public Optional<User> getByLogin(String login) {
+        return userDAO.getByLogin(login);
     }
 
     public void save(User user) {

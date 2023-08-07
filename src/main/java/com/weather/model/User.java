@@ -9,6 +9,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Setter
 @Getter
+@ToString(of = "login")
 @EqualsAndHashCode(of = "id")
 @Entity
 @Table(name = "users")
@@ -23,7 +24,7 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     @Setter(AccessLevel.PRIVATE)
     private Set<Location> locations = new HashSet<>();
 

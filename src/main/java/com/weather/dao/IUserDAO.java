@@ -16,7 +16,7 @@ public class IUserDAO implements UserDAO {
             = Persistence.createEntityManagerFactory("postgres");
 
     @Override
-    public Optional<User> get(Long id) {
+    public Optional<User> getById(Long id) {
         EntityManager entityManager = emf.createEntityManager();
         entityManager.unwrap(Session.class).setDefaultReadOnly(true);
         entityManager.getTransaction().begin();
@@ -45,5 +45,27 @@ public class IUserDAO implements UserDAO {
         } finally {
             entityManager.close();
         }
+    }
+
+    @Override
+    public Optional<User> getByLogin(String login) {
+        EntityManager entityManager = emf.createEntityManager();
+        entityManager.unwrap(Session.class).setDefaultReadOnly(true);
+        entityManager.getTransaction().begin();
+        try {
+            User user = entityManager
+                    .createQuery("SELECT u FROM User u WHERE u.login =: login", User.class)
+                    .setParameter("login", login)
+                    .getSingleResult();
+            entityManager.getTransaction().commit();
+            return Optional.ofNullable(user);
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+//            throw new UserDaoException(String.format("Cannot perform getByLogin( %s )", login), e);
+            return Optional.empty();
+        } finally {
+            entityManager.close();
+        }
+
     }
 }
