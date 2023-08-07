@@ -1,8 +1,8 @@
 package com.weather.controller;
 
-import com.weather.dao.ISessionDAO;
-import com.weather.dao.IUserDAO;
-import com.weather.exception.UserDaoException;
+import com.weather.config.ThymeleafConfiguration;
+import com.weather.dao.AIISessionDAO;
+import com.weather.dao.UserDAO;
 import com.weather.model.Session;
 import com.weather.model.User;
 import com.weather.service.SessionService;
@@ -13,6 +13,10 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.web.IWebExchange;
+import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -21,7 +25,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 @WebServlet("/")
-public class RegistrationController extends HttpServlet {
+public class CheckUserController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
@@ -29,6 +33,13 @@ public class RegistrationController extends HttpServlet {
         Cookie[] cookies = req.getCookies();
         boolean isSessionExpired = true;
         Long id = null;
+
+        TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
+                ThymeleafConfiguration.TEMPLATE_ENGINE_ATTR);
+        IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
+                .buildExchange(req, resp);
+        WebContext context = new WebContext(webExchange);
+
         if (cookies != null) {
             Optional<Cookie> userId = Arrays.stream(req.getCookies())
                     .filter(cookie -> cookie.getName().equals("user_id"))
@@ -36,7 +47,7 @@ public class RegistrationController extends HttpServlet {
 
             if (userId.isPresent()) {
                 id = Long.parseLong(userId.get().getValue());
-                SessionService sessionService = new SessionService(new ISessionDAO());
+                SessionService sessionService = new SessionService(new AIISessionDAO());
                 Optional<Session> session = sessionService.getSessionByUserId(id);
                 if (session.isPresent()) {
                     isSessionExpired = isSessionExpired(session.get());
@@ -44,14 +55,15 @@ public class RegistrationController extends HttpServlet {
             }
         }
 
-        if (isSessionExpired) {
-//            resp.sendRedirect("login.jsp");
-            req.getRequestDispatcher("login.jsp").forward(req, resp);
+        if (isSessionExpired && id != null) {
+            templateEngine.process("login.jsp", context, resp.getWriter());
+        } else if (id == null) {
+            templateEngine.process("signup.jsp", context, resp.getWriter());
         } else {
-            UserService userService = new UserService(new IUserDAO());
+            UserService userService = new UserService(new UserDAO());
             Optional<User> user = userService.getById(id);
-            req.setAttribute("user", user.orElseThrow(() -> new UserDaoException("Cannot find user")));
-            req.getRequestDispatcher("/WEB-INF/templates/authorised.jsp").forward(req, resp);
+            context.setVariable("user", user.get());
+            templateEngine.process("user-data.jsp", context, resp.getWriter());
         }
     }
 

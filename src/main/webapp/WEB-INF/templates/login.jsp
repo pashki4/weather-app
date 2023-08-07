@@ -25,7 +25,7 @@
 </style>
 
 <div class="text-center">
-    <form style="max-width: 300px; margin: auto" th:action="@{/test}" class="credentials"
+    <form style="max-width: 300px; margin: auto" th:action="@{/login}" class="credentials"
           method="POST">
         <img
                 class="mt-4 mb-4"
@@ -57,6 +57,7 @@
         <div class="mt-3">
             <button type="submit" class="btn btn-primary btn-md w-100">Log In</button>
         </div>
+        <p><a th:href="@{/signup}">Don't have account? Sign up</a></p>
     </form>
 </div>
 <script

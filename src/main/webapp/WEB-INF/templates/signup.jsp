@@ -13,7 +13,7 @@
   </head>
   <body>
     <style>
-      input[type="email"] {
+      input[type="text"] {
         border-bottom-left-radius: 0px;
         border-bottom-right-radius: 0px;
       }
@@ -24,7 +24,7 @@
       
     </style>
     <div class="text-center">
-      <form style="max-width: 300px; margin: auto" action="#" method="#">
+      <form style="max-width: 300px; margin: auto" th:action="@{/signup}" method="POST">
         <img
           class="mt-4 mb-4"
           src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png"
@@ -33,22 +33,29 @@
         />
         <h1 class="h3 mb-3 font-weight-normal">Sign Up</h1>
         <input
-          type="email"
+          type="text"
+          name="login"
+          id="login"
           class="form-control"
-          placeholder="Email"
+          placeholder="Login"
           required
           autofocus
         />
         <input
           type="password"
+          name="pwd"
+          id="id"
           class="form-control"
           placeholder="Password"
           required
         />
+        <div th:if="${errorMessage}" class="error-message">
+          <span style="color:red"><p th:text="${errorMessage}"></p></span>
+        </div>
         <div class="mt-3">
           <button class="btn btn-primary btn-md w-100">Sign Up</button>
         </div>
-        <p>Already have <a href="${pageContext.request.contextPath}/login.jsp">account</a>?</p>
+        <p>Already have <a th:href="@{/login}">account</a>?</p>
         <script
           src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
           integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
