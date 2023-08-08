@@ -2,6 +2,7 @@ package com.weather.dao;
 
 import com.weather.exception.SessionDaoException;
 import com.weather.model.Session;
+import com.weather.model.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -33,14 +34,17 @@ public class SessionDAO implements ISessionDAO {
     }
 
     @Override
-    public void save(Session session) {
+    public void saveForUser(User user) {
         EntityManager entityManager = emf.createEntityManager();
         entityManager.getTransaction().begin();
         try {
-            entityManager.persist(session);
+            entityManager.createNativeQuery("INSERT INTO sessions(user_id) VALUES (?)")
+                    .setParameter(1, user.getId())
+                    .executeUpdate();
+            entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new SessionDaoException(String.format("Cannot perform save( %s )", session), e);
+            throw new SessionDaoException(String.format("Cannot perform saveForUser( %s )", user), e);
         } finally {
             entityManager.close();
         }

@@ -2,6 +2,7 @@ package com.weather.service;
 
 import com.weather.dao.ISessionDAO;
 import com.weather.model.Session;
+import com.weather.model.User;
 
 import java.util.Optional;
 
@@ -16,7 +17,7 @@ public class SessionService {
         return ISessionDAO.getSessionByUserId(userId);
     }
 
-    public void save(Session session) {
-        ISessionDAO.save(session);
+    public void saveSession(User user) {
+        ISessionDAO.saveForUser(user);
     }
 }

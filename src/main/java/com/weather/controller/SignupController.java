@@ -1,9 +1,11 @@
 package com.weather.controller;
 
 import com.weather.config.ThymeleafConfiguration;
+import com.weather.dao.SessionDAO;
 import com.weather.dao.UserDAO;
 import com.weather.exception.UserDaoException;
 import com.weather.model.User;
+import com.weather.service.SessionService;
 import com.weather.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -35,6 +37,7 @@ public class SignupController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = getUser(req);
         UserService userService = new UserService(new UserDAO());
+        SessionService sessionService = new SessionService(new SessionDAO());
         TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
                 ThymeleafConfiguration.TEMPLATE_ENGINE_ATTR);
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
@@ -42,7 +45,8 @@ public class SignupController extends HttpServlet {
         WebContext context = new WebContext(webExchange);
         try {
             userService.save(user);
-            insertCookie(resp, user);
+            addCookie(resp, user);
+            sessionService.saveSession(user);
             context.setVariable("user", user);
             templateEngine.process("user-data.jsp", context, resp.getWriter());
         } catch (UserDaoException e) {
@@ -51,8 +55,10 @@ public class SignupController extends HttpServlet {
         }
     }
 
-    private static void insertCookie(HttpServletResponse resp, User user) {
+    private static void addCookie(HttpServletResponse resp, User user) {
         Cookie cookie = new Cookie("user_id", String.valueOf(user.getId()));
+        cookie.setPath("/");
+        cookie.setMaxAge(120);
         resp.addCookie(cookie);
     }
 

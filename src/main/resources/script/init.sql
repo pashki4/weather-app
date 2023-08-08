@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS sessions
 (
     id         UUID      DEFAULT uuid_generate_v4(),
     user_id    BIGINT NOT NULL,
-    expires_at TIMESTAMP DEFAULT NOW() + INTERVAL '30 minutes',
+    expires_at TIMESTAMP DEFAULT NOW() + INTERVAL '1 minute',
     CONSTRAINT sessions_pk PRIMARY KEY (id),
     CONSTRAINT sessions_users_fk FOREIGN KEY (user_id) REFERENCES users (id)
 );
@@ -36,6 +36,7 @@ VALUES ('user-0', crypt('password', gen_salt('bf')));
 INSERT INTO sessions(user_id) VALUES(1);
 
 DROP TABLE users;
+DROP TABLE sessions;
 SELECT id
 FROM users
 WHERE login = 'user-0'
@@ -43,4 +44,4 @@ WHERE login = 'user-0'
 
 SELECT * FROM users;
 SELECT * FROM sessions;
-DELETE FROM users WHERE login = 'user-4';
+DELETE FROM users WHERE id > 1;
