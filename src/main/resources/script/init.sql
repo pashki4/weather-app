@@ -41,3 +41,6 @@ FROM users
 WHERE login = 'user-0'
   AND password = crypt('password', password);
 
+SELECT * FROM users;
+SELECT * FROM sessions;
+DELETE FROM users WHERE login = 'user-4';

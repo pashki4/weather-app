@@ -20,8 +20,8 @@ public class UserService {
         return IUserDAO.getByLogin(login);
     }
 
-    public User save(User user) {
-        return IUserDAO.save(user);
+    public void save(User user) {
+        IUserDAO.save(user);
     }
 
 }

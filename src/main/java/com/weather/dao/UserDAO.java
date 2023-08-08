@@ -32,13 +32,12 @@ public class UserDAO implements IUserDAO {
     }
 
     @Override
-    public User save(User user) {
+    public void save(User user) {
         EntityManager entityManager = emf.createEntityManager();
         entityManager.getTransaction().begin();
         try {
             entityManager.persist(user);
             entityManager.getTransaction().commit();
-            return entityManager.merge(user);
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
             throw new UserDaoException(String.format("Login: %s already exists", user.getLogin()), e);

@@ -1,22 +1,22 @@
 package com.weather.service;
 
-import com.weather.dao.SessionDAO;
+import com.weather.dao.ISessionDAO;
 import com.weather.model.Session;
 
 import java.util.Optional;
 
 public class SessionService {
-    private final SessionDAO SessionDAO;
+    private final ISessionDAO ISessionDAO;
 
-    public SessionService(SessionDAO SessionDAO) {
-        this.SessionDAO = SessionDAO;
+    public SessionService(ISessionDAO ISessionDAO) {
+        this.ISessionDAO = ISessionDAO;
     }
 
     public Optional<Session> getSessionByUserId(Long userId) {
-        return SessionDAO.getSessionByUserId(userId);
+        return ISessionDAO.getSessionByUserId(userId);
     }
 
     public void save(Session session) {
-        SessionDAO.save(session);
+        ISessionDAO.save(session);
     }
 }

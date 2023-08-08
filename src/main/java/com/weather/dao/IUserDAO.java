@@ -7,7 +7,7 @@ import java.util.Optional;
 public interface IUserDAO {
     Optional<User> getById(Long id);
 
-    User save(User user);
+    void save(User user);
 
     Optional<User> getByLogin(String login);
 

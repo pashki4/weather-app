@@ -7,6 +7,7 @@ import com.weather.model.User;
 import com.weather.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -41,12 +42,18 @@ public class SignupController extends HttpServlet {
         WebContext context = new WebContext(webExchange);
         try {
             userService.save(user);
+            insertCookie(resp, user);
             context.setVariable("user", user);
             templateEngine.process("user-data.jsp", context, resp.getWriter());
         } catch (UserDaoException e) {
             context.setVariable("errorMessage", e.getMessage());
             templateEngine.process("signup.jsp", context, resp.getWriter());
         }
+    }
+
+    private static void insertCookie(HttpServletResponse resp, User user) {
+        Cookie cookie = new Cookie("user_id", String.valueOf(user.getId()));
+        resp.addCookie(cookie);
     }
 
     private static User getUser(HttpServletRequest req) {

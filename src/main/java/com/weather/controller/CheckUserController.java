@@ -1,7 +1,7 @@
 package com.weather.controller;
 
 import com.weather.config.ThymeleafConfiguration;
-import com.weather.dao.AIISessionDAO;
+import com.weather.dao.SessionDAO;
 import com.weather.dao.UserDAO;
 import com.weather.model.Session;
 import com.weather.model.User;
@@ -47,7 +47,7 @@ public class CheckUserController extends HttpServlet {
 
             if (userId.isPresent()) {
                 id = Long.parseLong(userId.get().getValue());
-                SessionService sessionService = new SessionService(new AIISessionDAO());
+                SessionService sessionService = new SessionService(new SessionDAO());
                 Optional<Session> session = sessionService.getSessionByUserId(id);
                 if (session.isPresent()) {
                     isSessionExpired = checkSession(session.get());
