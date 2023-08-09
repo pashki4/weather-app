@@ -48,14 +48,24 @@
                 </form>
             </div>
             <div class="col-2 border bg-light text-end">
-                <span style="font-size: 24px" th:text="${user.getLogin()}"></span>
-                <button class="btn my-3">
-                    <i class="bi bi-box-arrow-right" style="font-size: 35px"></i>
-                </button>
+                <form th:action="@{/logout}" th:method="POST">
+                    <span style="font-size: 24px" th:text="${user.getLogin()}"></span>
+                    <button class="btn my-3" type="submit">
+                        <i class="bi bi-box-arrow-right" style="font-size: 35px"></i>
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 </header>
+
+<table>
+    <th:block th:each="location : ${user.getLocations()}">
+        <tr>
+            <td th:text="${location.getName()}">...</td>
+        </tr>
+    </th:block>
+</table>
 
 <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
