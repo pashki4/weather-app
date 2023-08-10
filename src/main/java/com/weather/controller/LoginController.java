@@ -4,8 +4,10 @@ import com.weather.config.ThymeleafConfiguration;
 import com.weather.dao.UserDAO;
 import com.weather.model.User;
 import com.weather.service.UserService;
+import com.weather.util.CookieUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -34,6 +36,7 @@ public class LoginController extends HttpServlet {
 
         if (user.isPresent()) {
             if (BCrypt.checkpw(req.getParameter("pwd"), user.get().getPassword())) {
+                CookieUtil.addCookie(resp, user.get());
                 context.setVariable("user", user.get());
                 templateEngine.process("user-data.jsp", context, resp.getWriter());
             } else {
