@@ -2,7 +2,10 @@ package com.weather.util;
 
 import com.weather.model.User;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.util.Arrays;
 
 public class CookieUtil {
     private CookieUtil() {
@@ -17,4 +20,15 @@ public class CookieUtil {
         resp.addCookie(cookie);
     }
 
+    public static void removeCookie(HttpServletRequest req, HttpServletResponse resp) {
+        Arrays.stream(req.getCookies())
+                .filter(cookie -> cookie.getName().equals("user_id"))
+                .findAny()
+                .ifPresent(cookie -> {
+                    cookie.setHttpOnly(true);
+                    cookie.setPath("/");
+                    cookie.setMaxAge(0);
+                    resp.addCookie(cookie);
+                });
+    }
 }
