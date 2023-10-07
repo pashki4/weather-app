@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 @WebServlet("/logout")
-public class Logout extends HttpServlet {
+public class LogoutController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -23,6 +23,8 @@ public class Logout extends HttpServlet {
                 .filter(cookie -> cookie.getName().equals("user_id"))
                 .findAny()
                 .ifPresent(cookie -> {
+                    cookie.setHttpOnly(true);
+                    cookie.setPath("/");
                     cookie.setMaxAge(0);
                     resp.addCookie(cookie);
                 });

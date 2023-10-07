@@ -41,7 +41,7 @@ public class CheckUserController extends HttpServlet {
         WebContext context = new WebContext(webExchange);
 
         if (cookies != null) {
-            Optional<Cookie> userId = Arrays.stream(req.getCookies())
+            Optional<Cookie> userId = Arrays.stream(cookies)
                     .filter(cookie -> cookie.getName().equals("user_id"))
                     .findAny();
 
@@ -55,10 +55,10 @@ public class CheckUserController extends HttpServlet {
             }
         }
 
-        if (isSessionExpired && id != null) {
-            templateEngine.process("login.jsp", context, resp.getWriter());
-        } else if (id == null) {
+        if (id == null) {
             templateEngine.process("signup.jsp", context, resp.getWriter());
+        } else if (isSessionExpired) {
+            templateEngine.process("login.jsp", context, resp.getWriter());
         } else {
             UserService userService = new UserService(new UserDAO());
             Optional<User> user = userService.getById(id);

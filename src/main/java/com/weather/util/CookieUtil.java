@@ -12,6 +12,7 @@ public class CookieUtil {
     public static void addCookie(HttpServletResponse resp, User user) {
         Cookie cookie = new Cookie("user_id", String.valueOf(user.getId()));
         cookie.setPath("/");
+        cookie.setHttpOnly(true);
         cookie.setMaxAge(120);
         resp.addCookie(cookie);
     }

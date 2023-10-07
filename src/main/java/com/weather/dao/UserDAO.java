@@ -53,7 +53,7 @@ public class UserDAO implements IUserDAO {
         entityManager.getTransaction().begin();
         try {
             User user = entityManager
-                    .createQuery("SELECT u FROM User u WHERE u.login =: login", User.class)
+                    .createQuery("SELECT u FROM User u LEFT JOIN FETCH u.locations WHERE u.login =: login", User.class)
                     .setParameter("login", login)
                     .getSingleResult();
             entityManager.getTransaction().commit();
