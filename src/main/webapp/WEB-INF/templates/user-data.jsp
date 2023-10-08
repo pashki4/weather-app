@@ -27,10 +27,12 @@
                 Logo
             </div>
             <div class="col-8 border bg-light">
-                <form action="#" method="POST">
+                <form th:action="@{/search}" th:method="POST">
                     <div class="input-group mt-4">
                         <input
                                 type="text"
+                                name="city"
+                                id="city"
                                 class="form-control"
                                 placeholder="Enter city name"
                                 aria-label="searchCity"

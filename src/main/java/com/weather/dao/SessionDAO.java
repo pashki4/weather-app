@@ -49,4 +49,9 @@ public class SessionDAO implements ISessionDAO {
             entityManager.close();
         }
     }
+
+    @Override
+    public void invalidate(User user) {
+
+    }
 }

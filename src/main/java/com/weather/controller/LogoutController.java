@@ -1,7 +1,7 @@
 package com.weather.controller;
 
 import com.weather.config.ThymeleafConfiguration;
-import com.weather.util.CookieUtil;
+import com.weather.util.CookiesUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,14 +13,14 @@ import org.thymeleaf.web.IWebExchange;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 @WebServlet("/logout")
 public class LogoutController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        CookieUtil.removeCookie(req, resp);
+        CookiesUtil.deleteCookie(req, resp);
+
         TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
                 ThymeleafConfiguration.TEMPLATE_ENGINE_ATTR);
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())

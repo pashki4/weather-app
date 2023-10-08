@@ -1,10 +1,8 @@
 package com.weather.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -12,6 +10,7 @@ import java.math.BigDecimal;
 @Setter
 @Getter
 @EqualsAndHashCode(of = "id")
+@ToString(of = {"name", "country", "state"})
 @Entity
 @Table(name = "locations")
 public class Location {
@@ -26,8 +25,15 @@ public class Location {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @JsonProperty("lat")
     private BigDecimal latitude;
 
+    @JsonProperty("lon")
     private BigDecimal longitude;
+
+    @Transient
+    private String country;
+    @Transient
+    private String state;
 
 }
