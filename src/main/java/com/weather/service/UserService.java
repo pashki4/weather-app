@@ -17,7 +17,7 @@ public class UserService {
     }
 
     public Optional<User> getByLogin(String login) {
-        return IUserDAO.getByLogin(login);
+        return IUserDAO.getByLoginFetchLocations(login);
     }
 
     public void save(User user) {

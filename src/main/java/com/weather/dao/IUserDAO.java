@@ -9,7 +9,7 @@ public interface IUserDAO {
 
     void save(User user);
 
-    Optional<User> getByLogin(String login);
+    Optional<User> getByLoginFetchLocations(String login);
 
     Optional<User> create(User user);
 

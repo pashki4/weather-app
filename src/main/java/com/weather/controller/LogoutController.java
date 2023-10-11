@@ -26,6 +26,6 @@ public class LogoutController extends HttpServlet {
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
                 .buildExchange(req, resp);
         WebContext context = new WebContext(webExchange);
-        templateEngine.process("login.jsp", context, resp.getWriter());
+        templateEngine.process("login.html", context, resp.getWriter());
     }
 }

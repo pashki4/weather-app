@@ -47,7 +47,7 @@ public class UserDAO implements IUserDAO {
     }
 
     @Override
-    public Optional<User> getByLogin(String login) {
+    public Optional<User> getByLoginFetchLocations(String login) {
         EntityManager entityManager = emf.createEntityManager();
         entityManager.unwrap(Session.class).setDefaultReadOnly(true);
         entityManager.getTransaction().begin();

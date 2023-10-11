@@ -30,7 +30,7 @@ public class SignupController extends HttpServlet {
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
                 .buildExchange(req, resp);
         WebContext context = new WebContext(webExchange);
-        templateEngine.process("signup.jsp", context, resp.getWriter());
+        templateEngine.process("signup.html", context, resp.getWriter());
     }
 
     @Override
@@ -48,10 +48,10 @@ public class SignupController extends HttpServlet {
             CookiesUtil.addCookie(resp, user);
             sessionService.saveSession(user);
             context.setVariable("user", user);
-            templateEngine.process("user-data.jsp", context, resp.getWriter());
+            templateEngine.process("user-data.html", context, resp.getWriter());
         } catch (UserDaoException e) {
             context.setVariable("errorMessage", e.getMessage());
-            templateEngine.process("signup.jsp", context, resp.getWriter());
+            templateEngine.process("signup.html", context, resp.getWriter());
         }
     }
 

@@ -24,9 +24,9 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login");
-
         UserService userService = new UserService(new UserDAO());
         Optional<User> user = userService.getByLogin(login);
+
         TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
                 ThymeleafConfiguration.TEMPLATE_ENGINE_ATTR);
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
@@ -37,14 +37,14 @@ public class LoginController extends HttpServlet {
             if (BCrypt.checkpw(req.getParameter("pwd"), user.get().getPassword())) {
                 CookiesUtil.addCookie(resp, user.get());
                 context.setVariable("user", user.get());
-                templateEngine.process("user-data.jsp", context, resp.getWriter());
+                templateEngine.process("user-data.html", context, resp.getWriter());
             } else {
                 context.setVariable("errorMessage", "Wrong credentials");
-                templateEngine.process("login.jsp", context, resp.getWriter());
+                templateEngine.process("login.html", context, resp.getWriter());
             }
         } else {
             context.setVariable("errorMessage", "Wrong credentials");
-            templateEngine.process("login.jsp", context, resp.getWriter());
+            templateEngine.process("login.html", context, resp.getWriter());
         }
     }
 
@@ -55,6 +55,6 @@ public class LoginController extends HttpServlet {
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
                 .buildExchange(req, resp);
         WebContext context = new WebContext(webExchange);
-        templateEngine.process("login.jsp", context, resp.getWriter());
+        templateEngine.process("login.html", context, resp.getWriter());
     }
 }

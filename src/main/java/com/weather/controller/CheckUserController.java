@@ -56,14 +56,14 @@ public class CheckUserController extends HttpServlet {
         }
 
         if (id == null) {
-            templateEngine.process("signup.jsp", context, resp.getWriter());
+            templateEngine.process("signup.html", context, resp.getWriter());
         } else if (isSessionExpired) {
-            templateEngine.process("login.jsp", context, resp.getWriter());
+            templateEngine.process("login.html", context, resp.getWriter());
         } else {
             UserService userService = new UserService(new UserDAO());
             Optional<User> user = userService.getById(id);
             context.setVariable("user", user.get());
-            templateEngine.process("user-data.jsp", context, resp.getWriter());
+            templateEngine.process("user-data.html", context, resp.getWriter());
         }
     }
 
