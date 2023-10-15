@@ -48,17 +48,17 @@ public class SignupController extends HttpServlet {
             CookiesUtil.addCookie(resp, user);
             sessionService.saveSession(user);
             context.setVariable("user", user);
-            templateEngine.process("user-data.html", context, resp.getWriter());
+            templateEngine.process("authorized", context, resp.getWriter());
         } catch (UserDaoException e) {
             context.setVariable("errorMessage", e.getMessage());
-            templateEngine.process("no-authorized.html", context, resp.getWriter());
+            templateEngine.process("no-authorized", context, resp.getWriter());
         }
     }
 
     private static User getUser(HttpServletRequest req) {
         User user = new User();
-        user.setLogin(req.getParameter("loginSignUp"));
-        user.setPassword(BCrypt.hashpw(req.getParameter("pwd"), BCrypt.gensalt()));
+        user.setLogin(req.getParameter("signUpUserName"));
+        user.setPassword(BCrypt.hashpw(req.getParameter("signPass"), BCrypt.gensalt()));
         return user;
     }
 }

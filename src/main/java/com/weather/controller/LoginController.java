@@ -23,7 +23,7 @@ import java.util.Optional;
 public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String login = req.getParameter("login");
+        String login = req.getParameter("loginUserName");
         UserService userService = new UserService(new UserDAO());
         Optional<User> user = userService.getByLogin(login);
 
@@ -33,7 +33,7 @@ public class LoginController extends HttpServlet {
                 .buildExchange(req, resp);
         WebContext context = new WebContext(webExchange);
 
-        if (user.isPresent() && BCrypt.checkpw(req.getParameter("pwd"), user.get().getPassword())) {
+        if (user.isPresent() && BCrypt.checkpw(req.getParameter("loginPass"), user.get().getPassword())) {
             CookiesUtil.addCookie(resp, user.get());
             context.setVariable("user", user.get());
             templateEngine.process("authorized", context, resp.getWriter());

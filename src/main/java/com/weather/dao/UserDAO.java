@@ -40,7 +40,7 @@ public class UserDAO implements IUserDAO {
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new UserDaoException(String.format("Login: %s already exists", user.getLogin()), e);
+            throw new UserDaoException(String.format("User: %s already exists", user.getLogin()), e);
         } finally {
             entityManager.close();
         }
