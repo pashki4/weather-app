@@ -4,6 +4,7 @@ import com.weather.config.ThymeleafConfiguration;
 import com.weather.dao.SessionDAO;
 import com.weather.dao.UserDAO;
 import com.weather.exception.UserDaoException;
+import com.weather.model.Session;
 import com.weather.model.User;
 import com.weather.service.SessionService;
 import com.weather.service.UserService;
@@ -20,6 +21,7 @@ import org.thymeleaf.web.IWebExchange;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @WebServlet("/signup")
 public class SignupController extends HttpServlet {
@@ -45,8 +47,9 @@ public class SignupController extends HttpServlet {
         WebContext context = new WebContext(webExchange);
         try {
             userService.save(user);
-            CookiesUtil.addCookie(resp, user);
             sessionService.saveSession(user);
+            Optional<Session> session = sessionService.getSessionByUserId(user.getId());
+            CookiesUtil.addCookie(resp, session.get());
             context.setVariable("user", user);
             templateEngine.process("authorized", context, resp.getWriter());
         } catch (UserDaoException e) {

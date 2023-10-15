@@ -8,6 +8,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public class SessionDAO implements ISessionDAO {
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("postgres");
@@ -15,11 +16,12 @@ public class SessionDAO implements ISessionDAO {
     @Override
     public Optional<Session> getSessionByUserId(Long userId) {
         EntityManager entityManager = emf.createEntityManager();
+        entityManager.unwrap(org.hibernate.Session.class).setDefaultReadOnly(true);
         entityManager.getTransaction().begin();
         try {
             Optional<Session> session = entityManager
                     .createQuery("SELECT s FROM Session s WHERE s.user.id =: id " +
-                            "ORDER BY s.expiresAt DESC LIMIT 1", Session.class)
+                                 "ORDER BY s.expiresAt DESC LIMIT 1", Session.class)
                     .setParameter("id", userId)
                     .getResultStream()
                     .findAny();
@@ -53,5 +55,22 @@ public class SessionDAO implements ISessionDAO {
     @Override
     public void invalidate(User user) {
 
+    }
+
+    @Override
+    public Optional<Session> getSessionById(UUID uuid) {
+        EntityManager entityManager = emf.createEntityManager();
+        entityManager.unwrap(org.hibernate.Session.class).setDefaultReadOnly(true);
+        entityManager.getTransaction().begin();
+        try {
+            Session session = entityManager.find(Session.class, uuid);
+            entityManager.getTransaction().commit();
+            return Optional.ofNullable(session);
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            throw new SessionDaoException(String.format("Cannot perform getSessionById( %s )", uuid), e);
+        } finally {
+            entityManager.close();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.weather.util;
 
+import com.weather.model.Session;
 import com.weather.model.User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,17 +13,17 @@ public class CookiesUtil {
         throw new IllegalArgumentException("Util class");
     }
 
-    public static void addCookie(HttpServletResponse resp, User user) {
-        Cookie cookie = new Cookie("user_id", String.valueOf(user.getId()));
+    public static void addCookie(HttpServletResponse resp, Session session) {
+        Cookie cookie = new Cookie("weather_id", String.valueOf(session.getId()));
         cookie.setPath("/");
         cookie.setHttpOnly(true);
-        cookie.setMaxAge(120);
+        cookie.setMaxAge(1800);
         resp.addCookie(cookie);
     }
 
     public static void deleteCookie(HttpServletRequest req, HttpServletResponse resp) {
         Arrays.stream(req.getCookies())
-                .filter(cookie -> cookie.getName().equals("user_id"))
+                .filter(cookie -> cookie.getName().equals("weather_id"))
                 .findAny()
                 .ifPresent(cookie -> {
                     cookie.setHttpOnly(true);

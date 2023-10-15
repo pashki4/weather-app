@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.UUID;
 
 @WebServlet("/")
 public class CheckUserController extends HttpServlet {
@@ -32,7 +33,7 @@ public class CheckUserController extends HttpServlet {
         resp.setCharacterEncoding("utf-8");
         Cookie[] cookies = req.getCookies();
         boolean isSessionExpired = true;
-        Long id = null;
+        UUID uuid = null;
 
         TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
                 ThymeleafConfiguration.TEMPLATE_ENGINE_ATTR);
@@ -40,27 +41,27 @@ public class CheckUserController extends HttpServlet {
                 .buildExchange(req, resp);
 
         WebContext context = new WebContext(webExchange);
-
+        Optional<Session> session = Optional.empty();
         if (cookies != null) {
-            Optional<Cookie> userId = Arrays.stream(cookies)
-                    .filter(cookie -> cookie.getName().equals("user_id"))
+            Optional<Cookie> weatherId = Arrays.stream(cookies)
+                    .filter(cookie -> cookie.getName().equals("weather_id"))
                     .findAny();
 
-            if (userId.isPresent()) {
-                id = Long.parseLong(userId.get().getValue());
+            if (weatherId.isPresent()) {
+                uuid = UUID.fromString(weatherId.get().getValue());
                 SessionService sessionService = new SessionService(new SessionDAO());
-                Optional<Session> session = sessionService.getSessionByUserId(id);
+                 session = sessionService.getSessionById(uuid);
                 if (session.isPresent()) {
                     isSessionExpired = checkSession(session.get());
                 }
             }
         }
 
-        if (id == null || isSessionExpired) {
+        if (uuid == null || isSessionExpired) {
             templateEngine.process("no-authorized", context, resp.getWriter());
         } else {
             UserService userService = new UserService(new UserDAO());
-            Optional<User> user = userService.getById(id);
+            Optional<User> user = userService.getById(session.get().getUser().getId());
             context.setVariable("user", user.get());
             templateEngine.process("authorized", context, resp.getWriter());
         }

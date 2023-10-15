@@ -4,6 +4,7 @@ import com.weather.model.Session;
 import com.weather.model.User;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public interface ISessionDAO {
 
@@ -13,4 +14,5 @@ public interface ISessionDAO {
 
     void invalidate(User user);
 
+    Optional<Session> getSessionById(UUID uuid);
 }

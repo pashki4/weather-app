@@ -3,6 +3,7 @@ package com.weather.controller;
 import com.weather.config.ThymeleafConfiguration;
 import com.weather.dao.SessionDAO;
 import com.weather.dao.UserDAO;
+import com.weather.model.Session;
 import com.weather.model.User;
 import com.weather.service.SessionService;
 import com.weather.service.UserService;
@@ -35,12 +36,12 @@ public class LoginController extends HttpServlet {
                 .buildExchange(req, resp);
         WebContext context = new WebContext(webExchange);
 
-        SessionService sessionService = new SessionService(new SessionDAO());
-
         if (user.isPresent() && BCrypt.checkpw(req.getParameter("loginPass"), user.get().getPassword())) {
-            CookiesUtil.addCookie(resp, user.get());
-            context.setVariable("user", user.get());
+            SessionService sessionService = new SessionService(new SessionDAO());
             sessionService.saveSession(user.get());
+            Optional<Session> session = sessionService.getSessionByUserId(user.get().getId());
+            CookiesUtil.addCookie(resp, session.get());
+            context.setVariable("user", user.get());
             templateEngine.process("authorized", context, resp.getWriter());
         } else {
             context.setVariable("errorMessage", "Wrong credentials");
