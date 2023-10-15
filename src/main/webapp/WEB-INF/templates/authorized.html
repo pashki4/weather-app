@@ -38,12 +38,9 @@
                 </form>
             </div>
 
-            <div class="col text-center">
-                <span th:text="${user.getLogin()}"></span>
-            </div>
-
             <div class="col">
                 <form th:action="@{/logout}" th:method="post">
+                    <span th:text="${user.getLogin()}"></span>
                     <button class="btn btn-outline-primary">Log out</button>
                 </form>
             </div>
