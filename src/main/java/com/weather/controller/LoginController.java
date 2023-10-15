@@ -40,11 +40,13 @@ public class LoginController extends HttpServlet {
                 templateEngine.process("user-data.html", context, resp.getWriter());
             } else {
                 context.setVariable("errorMessage", "Wrong credentials");
-                templateEngine.process("login.html", context, resp.getWriter());
+//                templateEngine.process("login.html", context, resp.getWriter());
+                templateEngine.process("without-auth.html", context, resp.getWriter());
             }
         } else {
             context.setVariable("errorMessage", "Wrong credentials");
-            templateEngine.process("login.html", context, resp.getWriter());
+//            templateEngine.process("login.html", context, resp.getWriter());
+            templateEngine.process("without-auth.html", context, resp.getWriter());
         }
     }
 

@@ -56,7 +56,7 @@ public class CheckUserController extends HttpServlet {
         }
 
         if (id == null) {
-            templateEngine.process("signup.html", context, resp.getWriter());
+            templateEngine.process("without-auth.html", context, resp.getWriter());
         } else if (isSessionExpired) {
             templateEngine.process("login.html", context, resp.getWriter());
         } else {

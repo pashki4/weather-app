@@ -64,7 +64,8 @@ public class SearchController extends HttpServlet {
         }
 
         context.setVariable("locations", locations);
-        templateEngine.process("search-result.html", context, resp.getWriter());
+//        templateEngine.process("search-result.html", context, resp.getWriter());
+        templateEngine.process("without-auth.html", context, resp.getWriter());
     }
 
     private static List<Location> mapLocationsFromResponse(HttpResponse<String> response) throws JsonProcessingException {

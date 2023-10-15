@@ -30,7 +30,7 @@ public class SignupController extends HttpServlet {
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
                 .buildExchange(req, resp);
         WebContext context = new WebContext(webExchange);
-        templateEngine.process("signup.html", context, resp.getWriter());
+        templateEngine.process("without-auth.html", context, resp.getWriter());
     }
 
     @Override
@@ -51,13 +51,13 @@ public class SignupController extends HttpServlet {
             templateEngine.process("user-data.html", context, resp.getWriter());
         } catch (UserDaoException e) {
             context.setVariable("errorMessage", e.getMessage());
-            templateEngine.process("signup.html", context, resp.getWriter());
+            templateEngine.process("without-auth.html", context, resp.getWriter());
         }
     }
 
     private static User getUser(HttpServletRequest req) {
         User user = new User();
-        user.setLogin(req.getParameter("login"));
+        user.setLogin(req.getParameter("loginSignUp"));
         user.setPassword(BCrypt.hashpw(req.getParameter("pwd"), BCrypt.gensalt()));
         return user;
     }
