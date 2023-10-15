@@ -38,7 +38,7 @@ public class SearchController extends HttpServlet {
         String url = createUrl(req);
         HttpRequest request = createHttpRequest(url);
         HttpClient client = HttpClient.newHttpClient();
-        HttpResponse<String> response = null;
+        HttpResponse<String> response;
 
         try {
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -64,8 +64,7 @@ public class SearchController extends HttpServlet {
         }
 
         context.setVariable("locations", locations);
-//        templateEngine.process("search-result.html", context, resp.getWriter());
-        templateEngine.process("without-auth.html", context, resp.getWriter());
+        templateEngine.process("no-authorized.html", context, resp.getWriter());
     }
 
     private static List<Location> mapLocationsFromResponse(HttpResponse<String> response) throws JsonProcessingException {

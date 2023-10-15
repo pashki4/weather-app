@@ -33,30 +33,13 @@ public class LoginController extends HttpServlet {
                 .buildExchange(req, resp);
         WebContext context = new WebContext(webExchange);
 
-        if (user.isPresent()) {
-            if (BCrypt.checkpw(req.getParameter("pwd"), user.get().getPassword())) {
-                CookiesUtil.addCookie(resp, user.get());
-                context.setVariable("user", user.get());
-                templateEngine.process("user-data.html", context, resp.getWriter());
-            } else {
-                context.setVariable("errorMessage", "Wrong credentials");
-//                templateEngine.process("login.html", context, resp.getWriter());
-                templateEngine.process("without-auth.html", context, resp.getWriter());
-            }
+        if (user.isPresent() && BCrypt.checkpw(req.getParameter("pwd"), user.get().getPassword())) {
+            CookiesUtil.addCookie(resp, user.get());
+            context.setVariable("user", user.get());
+            templateEngine.process("authorized", context, resp.getWriter());
         } else {
             context.setVariable("errorMessage", "Wrong credentials");
-//            templateEngine.process("login.html", context, resp.getWriter());
-            templateEngine.process("without-auth.html", context, resp.getWriter());
+            templateEngine.process("no-authorized", context, resp.getWriter());
         }
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
-                ThymeleafConfiguration.TEMPLATE_ENGINE_ATTR);
-        IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
-                .buildExchange(req, resp);
-        WebContext context = new WebContext(webExchange);
-        templateEngine.process("login.html", context, resp.getWriter());
     }
 }

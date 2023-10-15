@@ -55,15 +55,13 @@ public class CheckUserController extends HttpServlet {
             }
         }
 
-        if (id == null) {
-            templateEngine.process("without-auth.html", context, resp.getWriter());
-        } else if (isSessionExpired) {
-            templateEngine.process("login.html", context, resp.getWriter());
+        if (id == null || isSessionExpired) {
+            templateEngine.process("no-authorized.html", context, resp.getWriter());
         } else {
             UserService userService = new UserService(new UserDAO());
             Optional<User> user = userService.getById(id);
             context.setVariable("user", user.get());
-            templateEngine.process("user-data.html", context, resp.getWriter());
+            templateEngine.process("authorized.html", context, resp.getWriter());
         }
     }
 

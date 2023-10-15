@@ -18,7 +18,7 @@ import java.io.IOException;
 public class LogoutController extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         CookiesUtil.deleteCookie(req, resp);
 
         TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
