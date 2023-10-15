@@ -38,6 +38,7 @@ public class CheckUserController extends HttpServlet {
                 ThymeleafConfiguration.TEMPLATE_ENGINE_ATTR);
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
                 .buildExchange(req, resp);
+
         WebContext context = new WebContext(webExchange);
 
         if (cookies != null) {
