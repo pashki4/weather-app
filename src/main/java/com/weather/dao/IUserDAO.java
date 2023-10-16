@@ -11,6 +11,4 @@ public interface IUserDAO {
 
     Optional<User> getByLoginFetch(String login);
 
-    Optional<User> create(User user);
-
 }

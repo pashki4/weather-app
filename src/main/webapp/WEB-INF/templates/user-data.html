@@ -21,11 +21,38 @@
   </header>
 
   <div th:fragment="copy">
-    <table class="table table-hover">
+    <table class="table table-hover text-center">
       <th:block th:each="location : ${user.getLocations()}">
         <tr>
           <td th:text="${location.name}">...</td>
           <td th:text="${location.country}">...</td>
+          <td>
+            <form th:method="POST" th:action="@{/remove}">
+              <input
+                      type="hidden"
+                      name="latitude"
+                      th:value="${location.latitude}"
+              />
+              <input
+                      type="hidden"
+                      name="longitude"
+                      th:value="${location.latitude}"
+              />
+              <input
+                      type="hidden"
+                      name="name"
+                      th:value="${location.name}"
+              />
+
+              <input th:if="${user} != null"
+                     type="hidden"
+                     name="userId"
+                     th:value="${user.getId()}"
+              />
+
+              <button type="submit" class="btn btn-danger"><i class="bi bi-trash3"></i></button>
+            </form>
+          </td>
         </tr>
       </th:block>
     </table>

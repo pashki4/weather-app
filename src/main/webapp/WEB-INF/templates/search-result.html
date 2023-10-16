@@ -8,9 +8,9 @@
 <div th:fragment="copy">
     <h2 style="text-align: center">Search results</h2>
     <br/>
-    <div class="container" style="text-align: center">
+    <div class="container text-center">
         <table class="table table-hover">
-            <th:block th:each="location : ${locations}" th:remove="tag">
+            <th:block th:each="location : ${locations}">
                 <tr>
                     <td th:text="${location.name}">...</td>
                     <td th:text="${location.country}">...</td>

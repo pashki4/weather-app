@@ -21,15 +21,15 @@ public class UserDAO implements IUserDAO {
         entityManager.unwrap(Session.class).setDefaultReadOnly(true);
         entityManager.getTransaction().begin();
         try {
-            User user
-                    = entityManager.createQuery("SELECT u FROM User u LEFT JOIN FETCH u.locations WHERE u.id =: id", User.class)
+            User user = entityManager
+                    .createQuery("SELECT u FROM User u LEFT JOIN FETCH u.locations WHERE u.id =: id", User.class)
                     .setParameter("id", id)
                     .getSingleResult();
             entityManager.getTransaction().commit();
             return Optional.ofNullable(user);
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new UserDaoException(String.format("Cannot perform get( %d )", id), e);
+            throw new UserDaoException(String.format("Error performing getByIdFetch( %d )", id), e);
         } finally {
             entityManager.close();
         }
@@ -44,7 +44,7 @@ public class UserDAO implements IUserDAO {
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new UserDaoException(String.format("User: %s already exists", user.getLogin()), e);
+            throw new UserDaoException(String.format("Error performing save( %s )", user), e);
         } finally {
             entityManager.close();
         }
@@ -64,24 +64,7 @@ public class UserDAO implements IUserDAO {
             return Optional.ofNullable(user);
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new UserDaoException(String.format("Cannot perform getByLoginFetch( %s )", login), e);
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    @Override
-    public Optional<User> create(User user) {
-        EntityManager entityManager = emf.createEntityManager();
-        entityManager.getTransaction().begin();
-        try {
-            entityManager.persist(user);
-            entityManager.getTransaction().commit();
-            User managedUser = entityManager.merge(user);
-            return Optional.of(managedUser);
-        } catch (Exception e) {
-            entityManager.getTransaction().rollback();
-            return Optional.empty();
+            throw new UserDaoException(String.format("Error performing getByLoginFetch( %s )", login), e);
         } finally {
             entityManager.close();
         }

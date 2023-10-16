@@ -33,7 +33,7 @@ public class AddLocationController extends HttpServlet {
         user.get().addLocation(location);
 
         LocationService locationService = new LocationService(new LocationDao());
-        locationService.addLocation(location);
+        locationService.add(location);
 
         TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
                 ThymeleafConfiguration.TEMPLATE_ENGINE_ATTR);
