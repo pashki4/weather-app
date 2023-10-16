@@ -26,7 +26,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static com.weather.util.PropertiesUtil.get;
 
@@ -53,18 +52,18 @@ public class SearchController extends HttpServlet {
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
                 .buildExchange(req, resp);
         WebContext context = new WebContext(webExchange);
+        context.setVariable("locations", locations);
 
         String userId = req.getParameter("userId");
-        long id;
         if (userId != null) {
-            id = Long.parseLong(userId);
+            long id = Long.parseLong(userId);
             IUserDAO userDAO = new UserDAO();
             Optional<User> user = userDAO.getById(id);
             context.setVariable("user", user.get());
+            templateEngine.process("authorized", context, resp.getWriter());
+        } else {
+            templateEngine.process("no-authorized", context, resp.getWriter());
         }
-
-        context.setVariable("locations", locations);
-        templateEngine.process("no-authorized.html", context, resp.getWriter());
     }
 
     private static List<Location> mapLocationsFromResponse(HttpResponse<String> response) throws JsonProcessingException {

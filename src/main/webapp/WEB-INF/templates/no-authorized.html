@@ -37,15 +37,6 @@
                                 aria-describedby="button-addon2"
                         />
 
-                        <div th:if="${user} != null">
-                            <input
-                                    type="hidden"
-                                    id="userId"
-                                    name="userId"
-                                    th:value="${user.getId()}"
-                            />
-                        </div>
-
                         <button
                                 class="btn btn-outline-secondary"
                                 type="submit"
