@@ -26,7 +26,7 @@ import java.util.Optional;
 public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String login = req.getParameter("loginUserName");
+        String login = req.getParameter("loginUserName").toLowerCase();
         UserService userService = new UserService(new UserDAO());
         Optional<User> user = userService.getByLogin(login);
 
