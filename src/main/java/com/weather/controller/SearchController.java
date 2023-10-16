@@ -58,7 +58,7 @@ public class SearchController extends HttpServlet {
         if (userId != null) {
             long id = Long.parseLong(userId);
             IUserDAO userDAO = new UserDAO();
-            Optional<User> user = userDAO.getById(id);
+            Optional<User> user = userDAO.getByIdFetch(id);
             context.setVariable("user", user.get());
             templateEngine.process("authorized", context, resp.getWriter());
         } else {

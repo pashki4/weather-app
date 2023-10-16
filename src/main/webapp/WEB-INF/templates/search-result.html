@@ -15,7 +15,7 @@
                     <td th:text="${location.name}">...</td>
                     <td th:text="${location.country}">...</td>
                     <td>
-                        <form method="POST" action="#">
+                        <form th:method="POST" th:action="@{/add}">
                             <input
                                     type="hidden"
                                     name="latitude"
@@ -26,6 +26,18 @@
                                     name="longitude"
                                     th:value="${location.latitude}"
                             />
+                            <input
+                                    type="hidden"
+                                    name="name"
+                                    th:value="${location.name}"
+                            />
+
+                            <input th:if="${user} != null"
+                                    type="hidden"
+                                    name="userId"
+                                    th:value="${user.getId()}"
+                            />
+
                             <button type="submit" class="btn btn-primary">Add</button>
                         </form>
                     </td>

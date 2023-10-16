@@ -13,15 +13,14 @@ public class UserService {
     }
 
     public Optional<User> getById(Long id) {
-        return IUserDAO.getById(id);
+        return IUserDAO.getByIdFetch(id);
     }
 
     public Optional<User> getByLogin(String login) {
-        return IUserDAO.getByLoginFetchLocations(login);
+        return IUserDAO.getByLoginFetch(login);
     }
 
     public void save(User user) {
         IUserDAO.save(user);
     }
-
 }

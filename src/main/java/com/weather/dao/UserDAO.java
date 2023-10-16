@@ -1,6 +1,7 @@
 package com.weather.dao;
 
 import com.weather.exception.UserDaoException;
+import com.weather.model.Location;
 import com.weather.model.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -15,12 +16,15 @@ public class UserDAO implements IUserDAO {
             = Persistence.createEntityManagerFactory("postgres");
 
     @Override
-    public Optional<User> getById(Long id) {
+    public Optional<User> getByIdFetch(Long id) {
         EntityManager entityManager = emf.createEntityManager();
         entityManager.unwrap(Session.class).setDefaultReadOnly(true);
         entityManager.getTransaction().begin();
         try {
-            User user = entityManager.find(User.class, id);
+            User user
+                    = entityManager.createQuery("SELECT u FROM User u LEFT JOIN FETCH u.locations WHERE u.id =: id", User.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
             entityManager.getTransaction().commit();
             return Optional.ofNullable(user);
         } catch (Exception e) {
@@ -47,7 +51,7 @@ public class UserDAO implements IUserDAO {
     }
 
     @Override
-    public Optional<User> getByLoginFetchLocations(String login) {
+    public Optional<User> getByLoginFetch(String login) {
         EntityManager entityManager = emf.createEntityManager();
         entityManager.unwrap(Session.class).setDefaultReadOnly(true);
         entityManager.getTransaction().begin();
@@ -60,12 +64,10 @@ public class UserDAO implements IUserDAO {
             return Optional.ofNullable(user);
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-//            throw new UserDaoException(String.format("Cannot perform getByLogin( %s )", login), e);
-            return Optional.empty();
+            throw new UserDaoException(String.format("Cannot perform getByLoginFetch( %s )", login), e);
         } finally {
             entityManager.close();
         }
-
     }
 
     @Override
