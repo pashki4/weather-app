@@ -39,8 +39,8 @@ public class CheckUserController extends HttpServlet {
                 ThymeleafConfiguration.TEMPLATE_ENGINE_ATTR);
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
                 .buildExchange(req, resp);
-
         WebContext context = new WebContext(webExchange);
+
         Optional<Session> session = Optional.empty();
         if (cookies != null) {
             Optional<Cookie> weatherId = Arrays.stream(cookies)
@@ -69,10 +69,5 @@ public class CheckUserController extends HttpServlet {
 
     private boolean checkSession(Session session) {
         return session.getExpiresAt().isBefore(LocalDateTime.now(ZoneId.of("UTC")));
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
     }
 }

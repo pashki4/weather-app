@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 @WebServlet("/add")
-public class AddLocationController extends HttpServlet {
+public class LocationController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long userId = Long.valueOf(req.getParameter("userId"));
