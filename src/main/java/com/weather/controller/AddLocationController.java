@@ -1,11 +1,9 @@
 package com.weather.controller;
 
 import com.weather.config.ThymeleafConfiguration;
-import com.weather.dao.LocationDao;
 import com.weather.dao.UserDAO;
 import com.weather.model.Location;
 import com.weather.model.User;
-import com.weather.service.LocationService;
 import com.weather.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

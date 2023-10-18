@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Setter
 @Getter
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"latitude", "longitude"})
 @ToString(of = {"name", "country", "state"})
 @Entity
 @Table(name = "locations")
