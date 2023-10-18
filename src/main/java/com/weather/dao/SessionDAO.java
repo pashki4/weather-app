@@ -52,10 +52,6 @@ public class SessionDAO implements ISessionDAO {
         }
     }
 
-    @Override
-    public void invalidate(User user) {
-
-    }
 
     @Override
     public Optional<Session> getSessionById(UUID uuid) {

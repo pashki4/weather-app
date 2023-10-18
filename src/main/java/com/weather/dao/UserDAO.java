@@ -69,4 +69,21 @@ public class UserDAO implements IUserDAO {
             entityManager.close();
         }
     }
+
+    @Override
+    public void addLocation(Long id, Location location) {
+        EntityManager entityManager = emf.createEntityManager();
+        entityManager.getTransaction().begin();
+        try {
+            User referenceUser = entityManager.getReference(User.class, id);
+            referenceUser.addLocation(location);
+            entityManager.persist(location);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            throw new UserDaoException(String.format("Error performing addLocation( %d, %s ) ", id, location), e);
+        } finally {
+            entityManager.close();
+        }
+    }
 }

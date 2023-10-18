@@ -12,7 +12,5 @@ public interface ISessionDAO {
 
     void saveForUser(User user);
 
-    void invalidate(User user);
-
     Optional<Session> getSessionById(UUID uuid);
 }
