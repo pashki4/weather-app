@@ -26,13 +26,10 @@ public class RemoveLocationController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long userId = Long.valueOf(req.getParameter("userId"));
         Long locationId = Long.valueOf(req.getParameter("locationId"));
-        LocationService locationService = new LocationService(new LocationDao());
-        Location location = new Location();
-        location.setId(locationId);
-        locationService.remove(location);
-        UserService userService = new UserService(new UserDAO());
-        Optional<User> user = userService.getById(userId);
 
+        UserService userService = new UserService(new UserDAO());
+        userService.removeLocation(userId, locationId);
+        Optional<User> user = userService.getById(userId);
         TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
                 ThymeleafConfiguration.TEMPLATE_ENGINE_ATTR);
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())

@@ -29,11 +29,8 @@ public class AddLocationController extends HttpServlet {
         Location location = mapLocation(req);
 
         UserService userService = new UserService(new UserDAO());
+        userService.addLocation(userId, location);
         Optional<User> user = userService.getById(userId);
-        user.get().addLocation(location);
-
-        LocationService locationService = new LocationService(new LocationDao());
-        locationService.add(location);
 
         TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
                 ThymeleafConfiguration.TEMPLATE_ENGINE_ATTR);

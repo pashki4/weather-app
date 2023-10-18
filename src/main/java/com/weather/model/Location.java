@@ -36,4 +36,7 @@ public class Location {
     @Transient
     private String state;
 
+    public Location(Long locationId) {
+        this.id = locationId;
+    }
 }

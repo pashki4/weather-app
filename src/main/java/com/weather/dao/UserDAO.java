@@ -86,4 +86,27 @@ public class UserDAO implements IUserDAO {
             entityManager.close();
         }
     }
+
+    @Override
+    public void removeLocation(Long userId, Long locationId) {
+        EntityManager entityManager = emf.createEntityManager();
+        Location location = getLocation(locationId);
+        entityManager.getTransaction().begin();
+        try {
+            User referenceUser = entityManager.getReference(User.class, userId);
+            referenceUser.removeLocation(location);
+            Location referenceLocation = entityManager.getReference(Location.class, location.getId());
+            entityManager.remove(referenceLocation);
+            entityManager.getTransaction().commit();
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            throw new UserDaoException(String.format("Error performing removeLocation( %d, %d)", userId, location.getId()), e);
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    private Location getLocation(Long locationId) {
+        return new Location(locationId);
+    }
 }

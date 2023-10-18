@@ -13,4 +13,6 @@ public interface IUserDAO {
     Optional<User> getByLoginFetch(String login);
 
     void addLocation(Long id, Location location);
+
+    void removeLocation(Long userId, Long locationId);
 }
