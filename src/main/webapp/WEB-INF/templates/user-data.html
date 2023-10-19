@@ -22,6 +22,7 @@
 
   <div th:fragment="copy">
     <table class="table table-hover text-center">
+
       <th:block th:each="location : ${user.getLocations()}">
         <tr>
           <td th:text="${location.name}">...</td>

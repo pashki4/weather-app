@@ -3,8 +3,7 @@ package com.weather.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @NoArgsConstructor
 @Setter
@@ -26,7 +25,7 @@ public class User {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     @Setter(AccessLevel.PRIVATE)
-    private Set<Location> locations = new HashSet<>();
+    private List<Location> locations = new ArrayList<>();
 
     public void addLocation(Location location) {
         locations.add(location);

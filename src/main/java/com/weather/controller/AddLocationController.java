@@ -17,6 +17,7 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.Optional;
 
 @WebServlet("/add")
@@ -26,18 +27,23 @@ public class AddLocationController extends HttpServlet {
         Long userId = Long.valueOf(req.getParameter("userId"));
         Location location = mapLocation(req);
 
-        UserService userService = new UserService(new UserDAO());
-        userService.addLocation(userId, location);
-        Optional<User> user = userService.getById(userId);
-
         TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
                 ThymeleafConfiguration.TEMPLATE_ENGINE_ATTR);
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
                 .buildExchange(req, resp);
         WebContext context = new WebContext(webExchange);
+        UserService userService = new UserService(new UserDAO());
 
-        context.setVariable("user", user.get());
-        templateEngine.process("authorized", context, resp.getWriter());
+        try {
+            userService.addLocation(userId, location);
+            Optional<User> user = userService.getById(userId);
+            context.setVariable("user", user.get());
+            templateEngine.process("authorized", context, resp.getWriter());
+        } catch (RuntimeException e) {
+            Optional<User> user = userService.getById(userId);
+            context.setVariable("user", user.get());
+            templateEngine.process("authorized", context, resp.getWriter());
+        }
     }
 
     private Location mapLocation(HttpServletRequest req) {

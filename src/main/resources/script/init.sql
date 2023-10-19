@@ -24,16 +24,18 @@ CREATE TABLE IF NOT EXISTS locations
     id        BIGSERIAL,
     name      VARCHAR(255)   NOT NULL,
     user_id   BIGINT         NOT NULL,
-    latitude  DECIMAL(9, 7)  NOT NULL,
-    longitude DECIMAL(10, 7) NOT NULL,
+    latitude  NUMERIC(9, 7)  NOT NULL,
+    longitude NUMERIC(10, 7) NOT NULL,
     CONSTRAINT locations_pk PRIMARY KEY (id),
+    CONSTRAINT location_uq UNIQUE (latitude, longitude, user_id),
     CONSTRAINT locations_users_fk FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 INSERT INTO users(login, password)
 VALUES ('user-0', crypt('password', gen_salt('bf')));
 
-INSERT INTO sessions(user_id) VALUES(1);
+INSERT INTO sessions(user_id)
+VALUES (1);
 
 DROP TABLE users;
 DROP TABLE sessions;
@@ -42,6 +44,10 @@ FROM users
 WHERE login = 'user-0'
   AND password = crypt('password', password);
 
-SELECT * FROM users;
-SELECT * FROM sessions;
-DELETE FROM users WHERE id > 1;
+SELECT *
+FROM users;
+SELECT *
+FROM sessions;
+DELETE
+FROM users
+WHERE id > 1;

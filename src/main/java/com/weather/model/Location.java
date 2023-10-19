@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 
 @NoArgsConstructor
 @Setter
@@ -13,7 +14,7 @@ import java.math.BigDecimal;
 @ToString(of = {"name", "country", "state"})
 @Entity
 @Table(name = "locations")
-public class Location {
+public class Location{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,9 +27,11 @@ public class Location {
     private User user;
 
     @JsonProperty("lat")
+    @Column(precision = 9, scale = 7)
     private BigDecimal latitude;
 
     @JsonProperty("lon")
+    @Column(precision = 10, scale = 7)
     private BigDecimal longitude;
 
     @Transient
