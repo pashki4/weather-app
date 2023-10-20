@@ -1,20 +1,20 @@
 package com.weather.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.weather.dto.WeatherData;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.Comparator;
 
 @NoArgsConstructor
 @Setter
 @Getter
 @EqualsAndHashCode(of = {"latitude", "longitude"})
-@ToString(of = {"name", "country", "state"})
+@ToString(of = "name")
 @Entity
 @Table(name = "locations")
-public class Location{
+public class Location {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +35,7 @@ public class Location{
     private BigDecimal longitude;
 
     @Transient
-    private String country;
-    @Transient
-    private String state;
+    private WeatherData weatherData;
 
     public Location(Long locationId) {
         this.id = locationId;

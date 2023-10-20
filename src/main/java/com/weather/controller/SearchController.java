@@ -45,7 +45,7 @@ public class SearchController extends HttpServlet {
             throw new RuntimeException("Error sending request to: " + url, e);
         }
 
-        List<Location> locations = mapLocationsFromResponse(response);
+        List<Location> locations = mapLocationFromResponse(response);
 
         TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
                 ThymeleafConfiguration.TEMPLATE_ENGINE_ATTR);
@@ -66,7 +66,7 @@ public class SearchController extends HttpServlet {
         }
     }
 
-    private static List<Location> mapLocationsFromResponse(HttpResponse<String> response) throws JsonProcessingException {
+    private static List<Location> mapLocationFromResponse(HttpResponse<String> response) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         return mapper.readValue(response.body(), new TypeReference<>() {
@@ -83,6 +83,6 @@ public class SearchController extends HttpServlet {
 
     private static String createUrl(HttpServletRequest req) {
         String city = req.getParameter("city").replace(" ", "+");
-        return get("apiUrl") + city + "&limit=" + get("limit") + "&appid=" + get("appid");
+        return get("search.url") + city + "&limit=" + get("search.limit") + "&appid=" + get("appid");
     }
 }
