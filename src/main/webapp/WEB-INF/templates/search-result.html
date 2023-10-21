@@ -6,7 +6,7 @@
 </head>
 <body>
 <div th:fragment="copy">
-    <h2 style="text-align: center">Search results</h2>
+    <h2 class="text-center">Search results</h2>
     <br/>
     <div class="container">
         <table class="table table-hover text-center">
@@ -15,8 +15,8 @@
                     <td th:text="${location.name}">...</td>
                     <td th:text="${location.country}">...</td>
                     <td th:text="${location.weatherData.temp()} + ' °C'">...</td>
-                    <td ><img th:src="@{'https://openweathermap.org/img/wn/' + ${location.weatherData.icon()} + '.png'}"
-                              th:alt="icon"/></td>
+                    <td><img th:src="@{'https://openweathermap.org/img/wn/' + ${location.weatherData.icon()} + '.png'}"
+                             th:alt="icon"/></td>
                     <td>
                         <form th:method="POST" th:action="@{/add}">
                             <input
@@ -36,9 +36,9 @@
                             />
 
                             <input th:if="${user} != null"
-                                    type="hidden"
-                                    name="userId"
-                                    th:value="${user.id}"
+                                   type="hidden"
+                                   name="userId"
+                                   th:value="${user.id}"
                             />
 
                             <button type="submit" class="btn btn-primary">Add</button>
