@@ -57,7 +57,7 @@
                         <div class="modal-content">
                             <div class="text-center">
                                 <form style="max-width: 300px; margin: auto" th:action="@{/login}" class="credentials"
-                                      method="POST">
+                                      th:method="POST">
                                     <img
                                             class="mt-4 mb-4"
                                             src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png"
@@ -103,7 +103,7 @@
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="text-center">
-                                <form style="max-width: 300px; margin: auto" th:action="@{/signup}" method="POST">
+                                <form style="max-width: 300px; margin: auto" th:action="@{/signup}" th:method="POST">
                                     <img
                                             class="mt-4 mb-4"
                                             src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png"
