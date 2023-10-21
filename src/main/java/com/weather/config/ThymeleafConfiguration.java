@@ -15,14 +15,10 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 public class ThymeleafConfiguration implements ServletContextListener {
     public static final String TEMPLATE_ENGINE_ATTR = "com.weather.TemplateEngineInstance";
 
-    private ITemplateEngine templateEngine;
-
-    private JakartaServletWebApplication application;
-
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        this.application = JakartaServletWebApplication.buildApplication(sce.getServletContext());
-        this.templateEngine = templateEngine(this.application);
+        JakartaServletWebApplication application = JakartaServletWebApplication.buildApplication(sce.getServletContext());
+        ITemplateEngine templateEngine = templateEngine(application);
 
         sce.getServletContext().setAttribute(TEMPLATE_ENGINE_ATTR, templateEngine);
     }
