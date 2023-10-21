@@ -6,6 +6,7 @@ import com.weather.dao.UserDAO;
 import com.weather.dto.UserDto;
 import com.weather.model.Session;
 import com.weather.model.User;
+import com.weather.service.HttpService;
 import com.weather.service.SessionService;
 import com.weather.service.UserService;
 import com.weather.util.CookiesUtil;
@@ -22,6 +23,7 @@ import org.thymeleaf.web.IWebExchange;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
+import java.net.http.HttpRequest;
 import java.util.Optional;
 
 @WebServlet("/login")
@@ -46,6 +48,16 @@ public class LoginController extends HttpServlet {
 
             User user = optionalUser.get();
             UserDto userDto = MapperUtil.mapUserDto(user);
+
+            userDto.locations.forEach(location -> {
+                String latitude = String.valueOf(location.getLatitude());
+                String longitude = String.valueOf(location.getLongitude());
+                String weatherDataUrl = HttpService.createWeatherDataUrl(latitude, longitude);
+                HttpRequest weatherDataRequest = HttpService.prepareHttpRequest(weatherDataUrl);
+                location.setWeatherData(MapperUtil
+                        .mapWeatherData(HttpService.sendRequest(weatherDataRequest)));
+            });
+
             context.setVariable("user", userDto);
             templateEngine.process("authorized", context, resp.getWriter());
         } else {
