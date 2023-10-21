@@ -27,6 +27,10 @@
         <tr>
           <td th:text="${location.name}">...</td>
           <td th:text="${location.country}">...</td>
+          <td th:text="${location.weatherData.temp()} + ' °C'">...</td>
+          <td ><img th:src="@{'https://openweathermap.org/img/wn/' + ${location.weatherData.icon()} + '.png'}"
+                    th:alt="icon"/></td>
+          <td>
           <td>
             <form th:method="POST" th:action="@{/remove}">
 

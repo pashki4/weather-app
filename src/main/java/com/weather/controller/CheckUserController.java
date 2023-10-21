@@ -3,10 +3,13 @@ package com.weather.controller;
 import com.weather.config.ThymeleafConfiguration;
 import com.weather.dao.SessionDAO;
 import com.weather.dao.UserDAO;
+import com.weather.dto.UserDto;
 import com.weather.model.Session;
 import com.weather.model.User;
+import com.weather.service.HttpService;
 import com.weather.service.SessionService;
 import com.weather.service.UserService;
+import com.weather.util.MapperUtil;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
@@ -18,6 +21,7 @@ import org.thymeleaf.web.IWebExchange;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
+import java.net.http.HttpRequest;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
@@ -60,8 +64,18 @@ public class CheckUserController extends HttpServlet {
             templateEngine.process("no-authorized", context, resp.getWriter());
         } else {
             UserService userService = new UserService(new UserDAO());
-            Optional<User> user = userService.getById(session.get().getUser().getId());
-            context.setVariable("user", user.get());
+            Optional<User> optionalUser = userService.getById(session.get().getUser().getId());
+            UserDto userDto = MapperUtil.mapUserDto(optionalUser.get());
+            userDto.locations.forEach(location -> {
+                String latitude = String.valueOf(location.getLatitude());
+                String longitude = String.valueOf(location.getLongitude());
+                String weatherDataUrl = HttpService.createWeatherDataUrl(latitude, longitude);
+                HttpRequest weatherDataRequest = HttpService.prepareHttpRequest(weatherDataUrl);
+                location.setWeatherData(MapperUtil
+                        .mapWeatherData(HttpService.sendRequest(weatherDataRequest)));
+            });
+
+            context.setVariable("user", userDto);
             templateEngine.process("authorized", context, resp.getWriter());
         }
     }
