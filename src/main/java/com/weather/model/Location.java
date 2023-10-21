@@ -35,6 +35,9 @@ public class Location {
     private BigDecimal longitude;
 
     @Transient
+    private String country;
+
+    @Transient
     private WeatherData weatherData;
 
     public Location(Long locationId) {

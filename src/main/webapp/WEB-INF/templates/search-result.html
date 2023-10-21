@@ -14,6 +14,7 @@
                 <tr>
                     <td th:text="${location.name}">...</td>
                     <td th:text="${location.country}">...</td>
+                    <td th:text="${location.weatherData.temp()}">...</td>
                     <td>
                         <form th:method="POST" th:action="@{/add}">
                             <input
@@ -24,7 +25,7 @@
                             <input
                                     type="hidden"
                                     name="longitude"
-                                    th:value="${location.latitude}"
+                                    th:value="${location.longitude}"
                             />
                             <input
                                     type="hidden"
