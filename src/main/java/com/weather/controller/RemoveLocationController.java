@@ -20,7 +20,7 @@ import java.util.Optional;
 @WebServlet("/remove")
 public class RemoveLocationController extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Long userId = Long.valueOf(req.getParameter("userId"));
         Long locationId = Long.valueOf(req.getParameter("locationId"));
 

@@ -7,7 +7,6 @@ import com.weather.model.Session;
 import com.weather.model.User;
 import com.weather.service.SessionService;
 import com.weather.service.UserService;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
@@ -28,7 +27,7 @@ import java.util.UUID;
 @WebServlet("/")
 public class CheckUserController extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html");
         resp.setCharacterEncoding("utf-8");
         Cookie[] cookies = req.getCookies();

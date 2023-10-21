@@ -4,12 +4,10 @@ import com.weather.config.ThymeleafConfiguration;
 import com.weather.dao.IUserDAO;
 import com.weather.dao.UserDAO;
 import com.weather.dto.UserDto;
-import com.weather.dto.WeatherData;
 import com.weather.model.Location;
 import com.weather.model.User;
 import com.weather.service.HttpService;
 import com.weather.util.MapperUtil;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,20 +18,15 @@ import org.thymeleaf.web.IWebExchange;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.URI;
 import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Optional;
-
-import static com.weather.util.PropertiesUtil.get;
 
 @WebServlet(urlPatterns = "/search")
 public class SearchController extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
                 ThymeleafConfiguration.TEMPLATE_ENGINE_ATTR);
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
@@ -70,18 +63,5 @@ public class SearchController extends HttpServlet {
         } else {
             templateEngine.process("no-authorized", context, resp.getWriter());
         }
-    }
-
-    private static HttpRequest createHttpRequest(String url) {
-        return HttpRequest.newBuilder()
-                .GET()
-                .header("accept", "application/json")
-                .uri(URI.create(url))
-                .build();
-    }
-
-    private static String createUrl(HttpServletRequest req) {
-        String city = req.getParameter("city").replace(" ", "+");
-        return get("search.url") + city + "&limit=" + get("search.limit") + "&appid=" + get("appid");
     }
 }

@@ -3,7 +3,6 @@ package com.weather.controller;
 import com.weather.config.ThymeleafConfiguration;
 import com.weather.dao.SessionDAO;
 import com.weather.dao.UserDAO;
-import com.weather.model.Location;
 import com.weather.model.Session;
 import com.weather.model.User;
 import com.weather.service.SessionService;
@@ -21,13 +20,12 @@ import org.thymeleaf.web.IWebExchange;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.Optional;
 
 @WebServlet("/login")
 public class LoginController extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String login = req.getParameter("loginUserName").toLowerCase();
         UserService userService = new UserService(new UserDAO());
         Optional<User> user = userService.getByLogin(login);

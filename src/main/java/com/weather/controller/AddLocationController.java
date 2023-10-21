@@ -5,7 +5,6 @@ import com.weather.dao.UserDAO;
 import com.weather.model.Location;
 import com.weather.model.User;
 import com.weather.service.UserService;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,13 +16,12 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Comparator;
 import java.util.Optional;
 
 @WebServlet("/add")
 public class AddLocationController extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Long userId = Long.valueOf(req.getParameter("userId"));
         Location location = mapLocation(req);
 
