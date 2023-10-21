@@ -39,7 +39,7 @@
                                 type="hidden"
                                 id="userId"
                                 name="userId"
-                                th:value="${user.getId()}"
+                                th:value="${user.id}"
                         />
                         <button
                                 class="btn btn-outline-secondary"
@@ -54,7 +54,7 @@
 
             <div class="col">
                 <form th:action="@{/logout}" th:method="post">
-                    <span th:text="${user.getLogin()}"></span>
+                    <span th:text="${user.login}"></span>
                     <button class="btn btn-outline-primary">Log out</button>
                 </form>
             </div>

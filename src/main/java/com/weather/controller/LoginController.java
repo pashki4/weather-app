@@ -3,11 +3,13 @@ package com.weather.controller;
 import com.weather.config.ThymeleafConfiguration;
 import com.weather.dao.SessionDAO;
 import com.weather.dao.UserDAO;
+import com.weather.dto.UserDto;
 import com.weather.model.Session;
 import com.weather.model.User;
 import com.weather.service.SessionService;
 import com.weather.service.UserService;
 import com.weather.util.CookiesUtil;
+import com.weather.util.MapperUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -26,22 +28,25 @@ import java.util.Optional;
 public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String login = req.getParameter("loginUserName").toLowerCase();
-        UserService userService = new UserService(new UserDAO());
-        Optional<User> user = userService.getByLogin(login);
-
         TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
                 ThymeleafConfiguration.TEMPLATE_ENGINE_ATTR);
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
                 .buildExchange(req, resp);
         WebContext context = new WebContext(webExchange);
 
-        if (user.isPresent() && BCrypt.checkpw(req.getParameter("loginPass"), user.get().getPassword())) {
+        String login = req.getParameter("loginUserName").toLowerCase();
+        UserService userService = new UserService(new UserDAO());
+        Optional<User> optionalUser = userService.getByLogin(login);
+
+        if (optionalUser.isPresent() && BCrypt.checkpw(req.getParameter("loginPass"), optionalUser.get().getPassword())) {
             SessionService sessionService = new SessionService(new SessionDAO());
-            sessionService.saveSession(user.get());
-            Optional<Session> session = sessionService.getSessionByUserId(user.get().getId());
+            sessionService.saveSession(optionalUser.get());
+            Optional<Session> session = sessionService.getSessionByUserId(optionalUser.get().getId());
             CookiesUtil.addCookie(resp, session.get());
-            context.setVariable("user", user.get());
+
+            User user = optionalUser.get();
+            UserDto userDto = MapperUtil.mapUserDto(user);
+            context.setVariable("user", userDto);
             templateEngine.process("authorized", context, resp.getWriter());
         } else {
             context.setVariable("errorMessage", "Wrong credentials");
