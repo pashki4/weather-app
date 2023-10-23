@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>location-data</title>
+</head>
+<body>
+<div th:fragment="copy">
+    <input
+            th:type="hidden"
+            th:name="name"
+            th:value="${location.name}"
+    />
+    <input
+            th:type="hidden"
+            th:name="lattitude"
+            th:value="${location.lattitude}"
+    />
+    <input
+            th:type="hidden"
+            th:name="longitude"
+            th:value="${location.longitude}"
+    />
+</div>
+</body>
+</html>

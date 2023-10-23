@@ -45,6 +45,8 @@ public class LoginController extends HttpServlet {
                 .buildExchange(req, resp);
         WebContext context = new WebContext(webExchange);
 
+
+
         String login = req.getParameter("loginUserName").toLowerCase();
         UserService userService = new UserService(new UserDAO());
         Optional<User> optionalUser = userService.getByLogin(login);

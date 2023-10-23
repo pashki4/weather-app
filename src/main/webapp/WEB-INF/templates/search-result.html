@@ -19,7 +19,13 @@
                              th:alt="icon"/></td>
                     <td>
 
-                        <form th:method="POST" th:if="" th:action="@{/add}">
+                        <form th:method="POST" th:action="@{/add} ">
+                            <input th:if="${user} != null"
+                                   type="hidden"
+                                   name="userId"
+                                   th:value="${user.id}"
+                            />
+
                             <input
                                     type="hidden"
                                     name="latitude"
@@ -35,13 +41,6 @@
                                     name="name"
                                     th:value="${location.name}"
                             />
-
-                            <input th:if="${user} != null"
-                                   type="hidden"
-                                   name="userId"
-                                   th:value="${user.id}"
-                            />
-
                             <button type="submit" class="btn btn-primary">Add</button>
                         </form>
                     </td>
