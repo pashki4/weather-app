@@ -32,29 +32,35 @@ public class AddLocationController extends HttpServlet {
                 .buildExchange(req, resp);
         WebContext context = new WebContext(webExchange);
 
-        Long userId = Long.valueOf(req.getParameter("userId"));
-        Location location = mapLocation(req);
-        UserService userService = new UserService(new UserDAO());
+        if (req.getParameter("userId") == null) {
+            Location location = mapLocation(req);
+            context.setVariable("location", location);
+            templateEngine.process("login", context, resp.getWriter());
+        } else {
+            Long userId = Long.valueOf(req.getParameter("userId"));
+            Location location = mapLocation(req);
+            UserService userService = new UserService(new UserDAO());
 
-        try {
-            userService.addLocation(userId, location);
-            Optional<User> optionalUser = userService.getById(userId);
-            UserDto userDto = MapperUtil.mapUserDto(optionalUser.get());
-            userDto.locations.forEach(loc -> {
-                String latitude = String.valueOf(loc.getLatitude());
-                String longitude = String.valueOf(loc.getLongitude());
-                String weatherDataUrl = HttpService.createWeatherDataUrl(latitude, longitude);
-                HttpRequest weatherDataRequest = HttpService.prepareHttpRequest(weatherDataUrl);
-                loc.setWeatherData(MapperUtil
-                        .mapWeatherData(HttpService.sendRequest(weatherDataRequest)));
-            });
+            try {
+                userService.addLocation(userId, location);
+                Optional<User> optionalUser = userService.getById(userId);
+                UserDto userDto = MapperUtil.mapUserDto(optionalUser.get());
+                userDto.locations.forEach(loc -> {
+                    String latitude = String.valueOf(loc.getLatitude());
+                    String longitude = String.valueOf(loc.getLongitude());
+                    String weatherDataUrl = HttpService.createWeatherDataUrl(latitude, longitude);
+                    HttpRequest weatherDataRequest = HttpService.prepareHttpRequest(weatherDataUrl);
+                    loc.setWeatherData(MapperUtil
+                            .mapWeatherData(HttpService.sendRequest(weatherDataRequest)));
+                });
 
-            context.setVariable("user", optionalUser.get());
-            templateEngine.process("authorized", context, resp.getWriter());
-        } catch (RuntimeException e) {
-            Optional<User> user = userService.getById(userId);
-            context.setVariable("user", user.get());
-            templateEngine.process("authorized", context, resp.getWriter());
+                context.setVariable("user", optionalUser.get());
+                templateEngine.process("authorized", context, resp.getWriter());
+            } catch (RuntimeException e) {
+                Optional<User> user = userService.getById(userId);
+                context.setVariable("user", user.get());
+                templateEngine.process("authorized", context, resp.getWriter());
+            }
         }
     }
 

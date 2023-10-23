@@ -32,7 +32,7 @@ public class SignupController extends HttpServlet {
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
                 .buildExchange(req, resp);
         WebContext context = new WebContext(webExchange);
-        templateEngine.process("no-authorized.html", context, resp.getWriter());
+        templateEngine.process("signup", context, resp.getWriter());
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SignupController extends HttpServlet {
             templateEngine.process("authorized", context, resp.getWriter());
         } catch (UserDaoException e) {
             context.setVariable("errorMessage", e.getMessage());
-            templateEngine.process("no-authorized", context, resp.getWriter());
+            templateEngine.process("signup", context, resp.getWriter());
         }
     }
 

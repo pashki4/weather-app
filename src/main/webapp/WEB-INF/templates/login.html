@@ -26,18 +26,18 @@
 
 <div class="text-center">
     <form style="max-width: 300px; margin: auto" th:action="@{/login}" class="credentials"
-          method="POST">
-        <img
+          th:method="POST">
+        <a href="./"> <img
                 class="mt-4 mb-4"
                 src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png"
                 alt="bootstraplogo"
                 height="72"
-        />
+        /></a>
         <h1 class="h3 mb-3 font-weight-normal">Log in</h1>
         <input
                 type="text"
-                name="login"
-                id="login"
+                name="loginUserName"
+                id="loginUserName"
                 class="form-control"
                 placeholder="Login"
                 required
@@ -45,14 +45,18 @@
         />
         <input
                 type="password"
-                name="pwd"
-                id="pwd"
+                name="loginPass"
+                id="loginPass"
                 class="form-control"
                 placeholder="Password"
                 required
         />
+        <div th:if="${location}">
+            <div th:replace="~{location-data :: copy}"></div>
+        </div>
+
         <div th:if="${errorMessage}" class="error-message">
-            <span style="color:red"><p th:text="${errorMessage}"></p></span>
+            <p style="color:red" th:text="${errorMessage}"></p>
         </div>
         <div class="mt-3">
             <button type="submit" class="btn btn-primary btn-md w-100">Log In</button>
