@@ -18,7 +18,8 @@
                     <td><img th:src="@{'https://openweathermap.org/img/wn/' + ${location.weatherData.icon()} + '.png'}"
                              th:alt="icon"/></td>
                     <td>
-                        <form th:method="POST" th:action="@{/add}">
+
+                        <form th:method="POST" th:if="" th:action="@{/add}">
                             <input
                                     type="hidden"
                                     name="latitude"

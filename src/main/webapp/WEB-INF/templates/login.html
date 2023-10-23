@@ -27,12 +27,12 @@
 <div class="text-center">
     <form style="max-width: 300px; margin: auto" th:action="@{/login}" class="credentials"
           method="POST">
-        <img
+        <a href="./"> <img
                 class="mt-4 mb-4"
                 src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png"
                 alt="bootstraplogo"
                 height="72"
-        />
+        /></a>
         <h1 class="h3 mb-3 font-weight-normal">Log in</h1>
         <input
                 type="text"
@@ -52,7 +52,7 @@
                 required
         />
         <div th:if="${errorMessage}" class="error-message">
-            <span style="color:red"><p th:text="${errorMessage}"></p></span>
+            <p style="color:red" th:text="${errorMessage}"></p>
         </div>
         <div class="mt-3">
             <button type="submit" class="btn btn-primary btn-md w-100">Log In</button>
