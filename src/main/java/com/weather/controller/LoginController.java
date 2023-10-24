@@ -4,6 +4,7 @@ import com.weather.config.ThymeleafConfiguration;
 import com.weather.dao.SessionDAO;
 import com.weather.dao.UserDAO;
 import com.weather.dto.UserDto;
+import com.weather.model.Location;
 import com.weather.model.Session;
 import com.weather.model.User;
 import com.weather.service.HttpService;
@@ -23,6 +24,7 @@ import org.thymeleaf.web.IWebExchange;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.http.HttpRequest;
 import java.util.Optional;
 
@@ -77,8 +79,18 @@ public class LoginController extends HttpServlet {
                 templateEngine.process("authorized", context, resp.getWriter());
             }
         } else {
+            returnLocationDataToContext(req, context);
             context.setVariable("errorMessage", "Wrong credentials");
             templateEngine.process("login", context, resp.getWriter());
         }
     }
+
+    private static void returnLocationDataToContext(HttpServletRequest req, WebContext context) {
+        Location location = new Location();
+        location.setName(req.getParameter("name"));
+        location.setLatitude(new BigDecimal(req.getParameter("latitude")));
+        location.setLongitude(new BigDecimal(req.getParameter("longitude")));
+        context.setVariable("location", location);
+    }
+
 }
