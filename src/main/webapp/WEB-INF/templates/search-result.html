@@ -20,10 +20,10 @@
                     <td>
 
                         <form th:method="POST" th:action="@{/add} ">
-                            <input th:if="${user} != null"
-                                   type="hidden"
-                                   name="userId"
-                                   th:value="${user.id}"
+                            <input th:if="${user}"
+                                    type="hidden"
+                                    name="userId"
+                                    th:value="${user.id}"
                             />
 
                             <input

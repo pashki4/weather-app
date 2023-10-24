@@ -37,14 +37,14 @@ public class LoginController extends HttpServlet {
         WebContext context = new WebContext(webExchange);
         templateEngine.process("login", context, resp.getWriter());
     }
+
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
                 ThymeleafConfiguration.TEMPLATE_ENGINE_ATTR);
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
                 .buildExchange(req, resp);
         WebContext context = new WebContext(webExchange);
-
 
 
         String login = req.getParameter("loginUserName").toLowerCase();
@@ -60,17 +60,22 @@ public class LoginController extends HttpServlet {
             User user = optionalUser.get();
             UserDto userDto = MapperUtil.mapUserDto(user);
 
-            userDto.locations.forEach(location -> {
-                String latitude = String.valueOf(location.getLatitude());
-                String longitude = String.valueOf(location.getLongitude());
-                String weatherDataUrl = HttpService.createWeatherDataUrl(latitude, longitude);
-                HttpRequest weatherDataRequest = HttpService.prepareHttpRequest(weatherDataUrl);
-                location.setWeatherData(MapperUtil
-                        .mapWeatherData(HttpService.sendRequest(weatherDataRequest)));
-            });
+            //if location exists
+            if (req.getParameter("name") != null) {
+                req.getRequestDispatcher("/add?userId=" + user.getId()).forward(req, resp);
+            } else {
+                userDto.locations.forEach(location -> {
+                    String latitude = String.valueOf(location.getLatitude());
+                    String longitude = String.valueOf(location.getLongitude());
+                    String weatherDataUrl = HttpService.createWeatherDataUrl(latitude, longitude);
+                    HttpRequest weatherDataRequest = HttpService.prepareHttpRequest(weatherDataUrl);
+                    location.setWeatherData(MapperUtil
+                            .mapWeatherData(HttpService.sendRequest(weatherDataRequest)));
+                });
 
-            context.setVariable("user", userDto);
-            templateEngine.process("authorized", context, resp.getWriter());
+                context.setVariable("user", userDto);
+                templateEngine.process("authorized", context, resp.getWriter());
+            }
         } else {
             context.setVariable("errorMessage", "Wrong credentials");
             templateEngine.process("login", context, resp.getWriter());

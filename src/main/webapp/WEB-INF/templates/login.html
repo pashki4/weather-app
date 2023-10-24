@@ -26,7 +26,7 @@
 
 <div class="text-center">
     <form style="max-width: 300px; margin: auto" th:action="@{/login}" class="credentials"
-          method="POST">
+          th:method="POST">
         <a href="./"> <img
                 class="mt-4 mb-4"
                 src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png"
@@ -51,7 +51,7 @@
                 placeholder="Password"
                 required
         />
-        <div th:if="${locations}">
+        <div th:if="${location}">
             <div th:replace="~{location-data :: copy}"></div>
         </div>
 
