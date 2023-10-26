@@ -30,7 +30,9 @@ public class AddLocationController extends HttpServlet {
         Location location = mapLocation(req);
 
         if (req.getParameter("userId") == null) {
-            context.setVariable("location", location);
+            context.setVariable("name", location.getName());
+            context.setVariable("latitude", location.getLatitude());
+            context.setVariable("longitude", location.getLongitude());
             templateEngine.process("login", context, resp.getWriter());
         } else {
             Long userId = Long.valueOf(req.getParameter("userId"));

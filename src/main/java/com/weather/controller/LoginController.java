@@ -4,10 +4,8 @@ import com.weather.config.ThymeleafConfiguration;
 import com.weather.dao.SessionDAO;
 import com.weather.dao.UserDAO;
 import com.weather.dto.UserDto;
-import com.weather.model.Location;
 import com.weather.model.Session;
 import com.weather.model.User;
-import com.weather.service.HttpService;
 import com.weather.service.SessionService;
 import com.weather.service.UserService;
 import com.weather.util.CookiesUtil;
@@ -24,8 +22,6 @@ import org.thymeleaf.web.IWebExchange;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.http.HttpRequest;
 import java.util.Optional;
 
 @WebServlet("/login")
@@ -69,19 +65,17 @@ public class LoginController extends HttpServlet {
                 templateEngine.process("authorized", context, resp.getWriter());
             }
         } else {
-            ifLocationIsPresentedAddToContext(req, context);
+            ifParamsArePresentedAddToContext(req, context);
             context.setVariable("errorMessage", "Wrong credentials");
             templateEngine.process("login", context, resp.getWriter());
         }
     }
 
-    private static void ifLocationIsPresentedAddToContext(HttpServletRequest req, WebContext context) {
+    private static void ifParamsArePresentedAddToContext(HttpServletRequest req, WebContext context) {
         if (req.getParameter("name") != null) {
-            Location location = new Location();
-            location.setName(req.getParameter("name"));
-            location.setLatitude(new BigDecimal(req.getParameter("latitude")));
-            location.setLongitude(new BigDecimal(req.getParameter("longitude")));
-            context.setVariable("location", location);
+            context.setVariable("name", req.getParameter("name"));
+            context.setVariable("latitude", req.getParameter("latitude"));
+            context.setVariable("longitude", req.getParameter("longitude"));
         }
     }
 }
