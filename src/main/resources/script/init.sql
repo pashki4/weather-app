@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS sessions
     user_id    BIGINT NOT NULL,
     expires_at TIMESTAMP DEFAULT NOW() + INTERVAL '1 minute',
     CONSTRAINT sessions_pk PRIMARY KEY (id),
-    CONSTRAINT sessions_users_fk FOREIGN KEY (user_id) REFERENCES users (id)
+    CONSTRAINT sessions_users_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE 
 );
 
 CREATE TABLE IF NOT EXISTS locations
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS locations
     longitude NUMERIC(10, 7) NOT NULL,
     CONSTRAINT locations_pk PRIMARY KEY (id),
     CONSTRAINT location_uq UNIQUE (latitude, longitude, user_id),
-    CONSTRAINT locations_users_fk FOREIGN KEY (user_id) REFERENCES users (id)
+    CONSTRAINT locations_users_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
 INSERT INTO users(login, password)
