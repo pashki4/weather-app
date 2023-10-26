@@ -38,14 +38,7 @@ public class SearchController extends HttpServlet {
 
         try {
             List<Location> locations = MapperUtil.mapLocation(HttpService.sendRequest(searchRequest));
-            locations.forEach(location -> {
-                String latitude = String.valueOf(location.getLatitude());
-                String longitude = String.valueOf(location.getLongitude());
-                String weatherDataUrl = HttpService.createWeatherDataUrl(latitude, longitude);
-                HttpRequest weatherDataRequest = HttpService.prepareHttpRequest(weatherDataUrl);
-                location.setWeatherData(MapperUtil
-                        .mapWeatherData(HttpService.sendRequest(weatherDataRequest)));
-            });
+            locations.forEach(MapperUtil::updateWeatherData);
             context.setVariable("locations", locations);
         } catch (IOException e) {
             throw new RuntimeException("Error sending request to: " + searchUrl, e);

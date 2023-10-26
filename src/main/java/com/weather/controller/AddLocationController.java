@@ -5,7 +5,6 @@ import com.weather.dao.UserDAO;
 import com.weather.dto.UserDto;
 import com.weather.model.Location;
 import com.weather.model.User;
-import com.weather.service.HttpService;
 import com.weather.service.UserService;
 import com.weather.util.MapperUtil;
 import jakarta.servlet.annotation.WebServlet;
@@ -19,7 +18,6 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.http.HttpRequest;
 import java.util.Optional;
 
 @WebServlet("/add")

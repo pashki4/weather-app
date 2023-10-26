@@ -48,7 +48,6 @@ public class LoginController extends HttpServlet {
                 .buildExchange(req, resp);
         WebContext context = new WebContext(webExchange);
 
-
         String login = req.getParameter("loginUserName").toLowerCase();
         UserService userService = new UserService(new UserDAO());
         Optional<User> optionalUser = userService.getByLogin(login);
@@ -62,19 +61,10 @@ public class LoginController extends HttpServlet {
             User user = optionalUser.get();
             UserDto userDto = MapperUtil.mapUserDto(user);
 
-            //if location exists
             if (req.getParameter("name") != null) {
                 req.getRequestDispatcher("/add?userId=" + user.getId()).forward(req, resp);
             } else {
-                userDto.locations.forEach(location -> {
-                    String latitude = String.valueOf(location.getLatitude());
-                    String longitude = String.valueOf(location.getLongitude());
-                    String weatherDataUrl = HttpService.createWeatherDataUrl(latitude, longitude);
-                    HttpRequest weatherDataRequest = HttpService.prepareHttpRequest(weatherDataUrl);
-                    location.setWeatherData(MapperUtil
-                            .mapWeatherData(HttpService.sendRequest(weatherDataRequest)));
-                });
-
+                userDto.locations.forEach(MapperUtil::updateWeatherData);
                 context.setVariable("user", userDto);
                 templateEngine.process("authorized", context, resp.getWriter());
             }
