@@ -42,15 +42,7 @@ public class RemoveLocationController extends HttpServlet {
         Optional<User> optionalUser = userService.getById(userId);
         User user = optionalUser.get();
         UserDto userDto = MapperUtil.mapUserDto(user);
-
-        userDto.locations.forEach(location -> {
-            String latitude = String.valueOf(location.getLatitude());
-            String longitude = String.valueOf(location.getLongitude());
-            String weatherDataUrl = HttpService.createWeatherDataUrl(latitude, longitude);
-            HttpRequest weatherDataRequest = HttpService.prepareHttpRequest(weatherDataUrl);
-            location.setWeatherData(MapperUtil
-                    .mapWeatherData(HttpService.sendRequest(weatherDataRequest)));
-        });
+        userDto.locations.forEach(MapperUtil::updateWeatherData);
 
         context.setVariable("user", userDto);
         templateEngine.process("authorized", context, resp.getWriter());
