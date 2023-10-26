@@ -9,7 +9,9 @@ import com.weather.dto.UserDto;
 import com.weather.dto.WeatherData;
 import com.weather.model.Location;
 import com.weather.model.User;
+import com.weather.service.HttpService;
 
+import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 
@@ -43,6 +45,15 @@ public class MapperUtil {
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         return mapper.readValue(response.body(), new TypeReference<>() {
         });
+    }
+
+    public static void updateWeatherData(Location location) {
+        String latitude = String.valueOf(location.getLatitude());
+        String longitude = String.valueOf(location.getLongitude());
+        String weatherDataUrl = HttpService.createWeatherDataUrl(latitude, longitude);
+        HttpRequest weatherDataRequest = HttpService.prepareHttpRequest(weatherDataUrl);
+        location.setWeatherData(MapperUtil
+                .mapWeatherData(HttpService.sendRequest(weatherDataRequest)));
     }
 
 

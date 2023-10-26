@@ -40,25 +40,18 @@ public class AddLocationController extends HttpServlet {
             Long userId = Long.valueOf(req.getParameter("userId"));
             Location location = mapLocation(req);
             UserService userService = new UserService(new UserDAO());
-
             try {
                 userService.addLocation(userId, location);
                 Optional<User> optionalUser = userService.getById(userId);
                 UserDto userDto = MapperUtil.mapUserDto(optionalUser.get());
-                userDto.locations.forEach(loc -> {
-                    String latitude = String.valueOf(loc.getLatitude());
-                    String longitude = String.valueOf(loc.getLongitude());
-                    String weatherDataUrl = HttpService.createWeatherDataUrl(latitude, longitude);
-                    HttpRequest weatherDataRequest = HttpService.prepareHttpRequest(weatherDataUrl);
-                    loc.setWeatherData(MapperUtil
-                            .mapWeatherData(HttpService.sendRequest(weatherDataRequest)));
-                });
-
-                context.setVariable("user", optionalUser.get());
+                userDto.locations.forEach(MapperUtil::updateWeatherData);
+                context.setVariable("user", userDto);
                 templateEngine.process("authorized", context, resp.getWriter());
             } catch (RuntimeException e) {
-                Optional<User> user = userService.getById(userId);
-                context.setVariable("user", user.get());
+                Optional<User> optionalUser = userService.getById(userId);
+                UserDto userDto = MapperUtil.mapUserDto(optionalUser.get());
+                userDto.locations.forEach(MapperUtil::updateWeatherData);
+                context.setVariable("user", userDto);
                 templateEngine.process("authorized", context, resp.getWriter());
             }
         }

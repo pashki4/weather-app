@@ -79,18 +79,19 @@ public class LoginController extends HttpServlet {
                 templateEngine.process("authorized", context, resp.getWriter());
             }
         } else {
-            returnLocationDataToContext(req, context);
+            ifLocationIsPresentedAddToContext(req, context);
             context.setVariable("errorMessage", "Wrong credentials");
             templateEngine.process("login", context, resp.getWriter());
         }
     }
 
-    private static void returnLocationDataToContext(HttpServletRequest req, WebContext context) {
-        Location location = new Location();
-        location.setName(req.getParameter("name"));
-        location.setLatitude(new BigDecimal(req.getParameter("latitude")));
-        location.setLongitude(new BigDecimal(req.getParameter("longitude")));
-        context.setVariable("location", location);
+    private static void ifLocationIsPresentedAddToContext(HttpServletRequest req, WebContext context) {
+        if (req.getParameter("name") != null) {
+            Location location = new Location();
+            location.setName(req.getParameter("name"));
+            location.setLatitude(new BigDecimal(req.getParameter("latitude")));
+            location.setLongitude(new BigDecimal(req.getParameter("longitude")));
+            context.setVariable("location", location);
+        }
     }
-
 }
