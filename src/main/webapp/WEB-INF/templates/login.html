@@ -51,9 +51,6 @@
                 placeholder="Password"
                 required
         />
-        <div th:if="${location}">
-            <div th:replace="~{location-data :: copy}"></div>
-        </div>
 
         <div th:if="${errorMessage}" class="error-message">
             <p style="color:red" th:text="${errorMessage}"></p>
@@ -61,7 +58,9 @@
         <div class="mt-3">
             <button type="submit" class="btn btn-primary btn-md w-100">Log In</button>
         </div>
-        <p>Don't have account? <a th:href="@{/signup}">Sign up</a></p>
+        <p>Don't have account? <a th:href="@{/signup(name=${location.name},
+         latitude=${location.getLatitude()},
+          longitude=${location.getLongitude()})}">Sign up</a></p>
     </form>
 </div>
 <script

@@ -4,7 +4,6 @@ import com.weather.config.ThymeleafConfiguration;
 import com.weather.dao.UserDAO;
 import com.weather.dto.UserDto;
 import com.weather.model.Location;
-import com.weather.model.User;
 import com.weather.service.UserService;
 import com.weather.util.MapperUtil;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,7 +17,6 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Optional;
 
 @WebServlet("/add")
 public class AddLocationController extends HttpServlet {
@@ -29,25 +27,22 @@ public class AddLocationController extends HttpServlet {
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
                 .buildExchange(req, resp);
         WebContext context = new WebContext(webExchange);
+        Location location = mapLocation(req);
 
         if (req.getParameter("userId") == null) {
-            Location location = mapLocation(req);
             context.setVariable("location", location);
             templateEngine.process("login", context, resp.getWriter());
         } else {
             Long userId = Long.valueOf(req.getParameter("userId"));
-            Location location = mapLocation(req);
             UserService userService = new UserService(new UserDAO());
             try {
                 userService.addLocation(userId, location);
-                Optional<User> optionalUser = userService.getById(userId);
-                UserDto userDto = MapperUtil.mapUserDto(optionalUser.get());
+                UserDto userDto = MapperUtil.mapUserDto(userService.getById(userId).get());
                 userDto.locations.forEach(MapperUtil::updateWeatherData);
                 context.setVariable("user", userDto);
                 templateEngine.process("authorized", context, resp.getWriter());
             } catch (RuntimeException e) {
-                Optional<User> optionalUser = userService.getById(userId);
-                UserDto userDto = MapperUtil.mapUserDto(optionalUser.get());
+                UserDto userDto = MapperUtil.mapUserDto(userService.getById(userId).get());
                 userDto.locations.forEach(MapperUtil::updateWeatherData);
                 context.setVariable("user", userDto);
                 templateEngine.process("authorized", context, resp.getWriter());

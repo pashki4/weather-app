@@ -36,20 +36,25 @@ public class SignupController extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        User user = getUser(req);
-        UserService userService = new UserService(new UserDAO());
-        SessionService sessionService = new SessionService(new SessionDAO());
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
                 ThymeleafConfiguration.TEMPLATE_ENGINE_ATTR);
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
                 .buildExchange(req, resp);
         WebContext context = new WebContext(webExchange);
+
+        User user = getUser(req);
+        UserService userService = new UserService(new UserDAO());
+        SessionService sessionService = new SessionService(new SessionDAO());
         try {
             userService.save(user);
             sessionService.saveSession(user);
             Optional<Session> session = sessionService.getSessionByUserId(user.getId());
             CookiesUtil.addCookie(resp, session.get());
+
+            if (req.getParameter("name") != null) {
+                req.getRequestDispatcher("/add?userId=" + user.getId()).forward(req, resp);
+            }
             context.setVariable("user", user);
             templateEngine.process("authorized", context, resp.getWriter());
         } catch (UserDaoException e) {
