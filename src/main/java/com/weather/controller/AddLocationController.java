@@ -5,7 +5,6 @@ import com.weather.dao.UserDAO;
 import com.weather.dto.UserDto;
 import com.weather.model.Location;
 import com.weather.service.UserService;
-import com.weather.util.MapperUtil;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,13 +38,13 @@ public class AddLocationController extends HttpServlet {
             UserService userService = new UserService(new UserDAO());
             try {
                 userService.addLocation(userId, location);
-                UserDto userDto = MapperUtil.mapUserDto(userService.getById(userId).get());
-                userDto.locations.forEach(MapperUtil::updateWeatherData);
+                UserDto userDto = userService.getById(userId).get();
+                userService.updateWeatherData(userDto);
                 context.setVariable("user", userDto);
                 templateEngine.process("authorized", context, resp.getWriter());
             } catch (RuntimeException e) {
-                UserDto userDto = MapperUtil.mapUserDto(userService.getById(userId).get());
-                userDto.locations.forEach(MapperUtil::updateWeatherData);
+                UserDto userDto = userService.getById(userId).get();
+                userService.updateWeatherData(userDto);
                 context.setVariable("user", userDto);
                 templateEngine.process("authorized", context, resp.getWriter());
             }

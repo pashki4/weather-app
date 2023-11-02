@@ -58,7 +58,7 @@ public class SignupController extends HttpServlet {
             context.setVariable("user", user);
             templateEngine.process("authorized", context, resp.getWriter());
         } catch (UserDaoException e) {
-            context.setVariable("errorMessage", e.getMessage());
+            context.setVariable("errorMessage", "Sorry, that login already exists!");
             templateEngine.process("signup", context, resp.getWriter());
         }
     }
