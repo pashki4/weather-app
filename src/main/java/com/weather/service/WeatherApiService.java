@@ -20,6 +20,13 @@ import static com.weather.util.PropertiesUtil.get;
 
 public class WeatherApiService {
 
+    private static final String SEARCH_URL = "http://api.openweathermap.org/geo/1.0/direct?q=";
+    private static final String SEARCH_LIMIT = "5";
+    private static final String WEATHER_DATA_URL = "https://api.openweathermap.org/data/2.5/weather?";
+    private static final String WEATHER_DATA_UNITS = "metric";
+    private static final String WEATHER_DATA_LANG = "en";
+
+
     private static final HttpClient client = HttpClient.newHttpClient();
 
     public static List<Location> findLocation(HttpServletRequest req) throws JsonProcessingException {
@@ -75,13 +82,13 @@ public class WeatherApiService {
 
     private static String createSearchLocationUrl(HttpServletRequest req) {
         String city = req.getParameter("city").replace(" ", "+");
-        return get("search.url") + city + "&limit=" + get("search.limit") + "&appid=" + get("appid");
+        return SEARCH_URL + city + "&limit=" + SEARCH_LIMIT + "&appid=" + get("appid");
     }
 
     private static String createWeatherDataUrl(Location location) {
         String latitude = String.valueOf(location.getLatitude());
         String longitude = String.valueOf(location.getLongitude());
-        return get("weather-data.url") + "lat=" + latitude + "&lon=" + longitude + "&lang=" + get("weather-data.lang")
-               + "&units=" + get("weather-data.units") + "&appid=" + get("appid");
+        return WEATHER_DATA_URL + "lat=" + latitude + "&lon=" + longitude + "&lang=" + WEATHER_DATA_LANG
+               + "&units=" + WEATHER_DATA_UNITS + "&appid=" + get("appid");
     }
 }
