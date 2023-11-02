@@ -1,13 +1,11 @@
 package com.weather.controller;
 
 import com.weather.config.ThymeleafConfiguration;
-import com.weather.dao.IUserDAO;
 import com.weather.dao.UserDAO;
 import com.weather.dto.UserDto;
 import com.weather.model.Location;
-import com.weather.model.User;
-import com.weather.service.HttpService;
-import com.weather.util.MapperUtil;
+import com.weather.service.WeatherApiService;
+import com.weather.service.UserService;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +16,6 @@ import org.thymeleaf.web.IWebExchange;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
-import java.net.http.HttpRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,25 +30,20 @@ public class SearchController extends HttpServlet {
                 .buildExchange(req, resp);
         WebContext context = new WebContext(webExchange);
 
-        String searchUrl = HttpService.createSearchLocationUrl(req);
-        HttpRequest searchRequest = HttpService.prepareHttpRequest(searchUrl);
-
         try {
-            List<Location> locations = MapperUtil.mapLocation(HttpService.sendRequest(searchRequest));
-            locations.forEach(MapperUtil::updateWeatherData);
+            List<Location> locations = WeatherApiService.findLocation(req);
+            locations.forEach(WeatherApiService::getWeatherData);
             context.setVariable("locations", locations);
         } catch (IOException e) {
-            throw new RuntimeException("Error sending request to: " + searchUrl, e);
+            throw new RuntimeException("Error searching location", e);
         }
 
         String userId = req.getParameter("userId");
         if (userId != null) {
             long id = Long.parseLong(userId);
-            IUserDAO userDAO = new UserDAO();
-            Optional<User> optionalUser = userDAO.getByIdFetch(id);
-            User user = optionalUser.get();
-            UserDto userDto = MapperUtil.mapUserDto(user);
-            context.setVariable("user", userDto);
+            UserService userService = new UserService(new UserDAO());
+            Optional<UserDto> userDto = userService.getById(id);
+            context.setVariable("user", userDto.get());
             templateEngine.process("authorized", context, resp.getWriter());
         } else {
             templateEngine.process("no-authorized", context, resp.getWriter());

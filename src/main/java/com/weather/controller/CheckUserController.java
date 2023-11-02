@@ -5,11 +5,8 @@ import com.weather.dao.SessionDAO;
 import com.weather.dao.UserDAO;
 import com.weather.dto.UserDto;
 import com.weather.model.Session;
-import com.weather.model.User;
-import com.weather.service.HttpService;
 import com.weather.service.SessionService;
 import com.weather.service.UserService;
-import com.weather.util.MapperUtil;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
@@ -21,7 +18,6 @@ import org.thymeleaf.web.IWebExchange;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
-import java.net.http.HttpRequest;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
@@ -64,9 +60,8 @@ public class CheckUserController extends HttpServlet {
             templateEngine.process("no-authorized", context, resp.getWriter());
         } else {
             UserService userService = new UserService(new UserDAO());
-            Optional<User> optionalUser = userService.getById(session.get().getUser().getId());
-            UserDto userDto = MapperUtil.mapUserDto(optionalUser.get());
-            userDto.locations.forEach(MapperUtil::updateWeatherData);
+            UserDto userDto = userService.getById(session.get().getUser().getId()).get();
+            userService.updateWeatherData(userDto);
 
             context.setVariable("user", userDto);
             templateEngine.process("authorized", context, resp.getWriter());

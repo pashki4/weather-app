@@ -3,12 +3,7 @@ package com.weather.controller;
 import com.weather.config.ThymeleafConfiguration;
 import com.weather.dao.UserDAO;
 import com.weather.dto.UserDto;
-import com.weather.model.Location;
-import com.weather.model.User;
-import com.weather.service.HttpService;
 import com.weather.service.UserService;
-import com.weather.util.MapperUtil;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,10 +14,7 @@ import org.thymeleaf.web.IWebExchange;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
-import java.net.http.HttpRequest;
-import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 @WebServlet("/remove")
 public class RemoveLocationController extends HttpServlet {
@@ -39,12 +31,10 @@ public class RemoveLocationController extends HttpServlet {
 
         UserService userService = new UserService(new UserDAO());
         userService.removeLocation(userId, locationId);
-        Optional<User> optionalUser = userService.getById(userId);
-        User user = optionalUser.get();
-        UserDto userDto = MapperUtil.mapUserDto(user);
-        userDto.locations.forEach(MapperUtil::updateWeatherData);
+        Optional<UserDto> userDto = userService.getById(userId);
+        userDto.ifPresent(userService::updateWeatherData);
 
-        context.setVariable("user", userDto);
+        context.setVariable("user", userDto.get());
         templateEngine.process("authorized", context, resp.getWriter());
     }
 }

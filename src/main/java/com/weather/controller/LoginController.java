@@ -4,12 +4,12 @@ import com.weather.config.ThymeleafConfiguration;
 import com.weather.dao.SessionDAO;
 import com.weather.dao.UserDAO;
 import com.weather.dto.UserDto;
+import com.weather.mapper.UserMapper;
 import com.weather.model.Session;
 import com.weather.model.User;
 import com.weather.service.SessionService;
 import com.weather.service.UserService;
 import com.weather.util.CookiesUtil;
-import com.weather.util.MapperUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -26,6 +26,8 @@ import java.util.Optional;
 
 @WebServlet("/login")
 public class LoginController extends HttpServlet {
+
+    private static final UserMapper userMapper = new UserMapper();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
@@ -54,13 +56,12 @@ public class LoginController extends HttpServlet {
             Optional<Session> session = sessionService.getSessionByUserId(optionalUser.get().getId());
             CookiesUtil.addCookie(resp, session.get());
 
-            User user = optionalUser.get();
-            UserDto userDto = MapperUtil.mapUserDto(user);
+            UserDto userDto = userMapper.map(optionalUser.get());
 
             if (req.getParameter("name") != null) {
-                req.getRequestDispatcher("/add?userId=" + user.getId()).forward(req, resp);
+                req.getRequestDispatcher("/add?userId=" + userDto.getId()).forward(req, resp);
             } else {
-                userDto.locations.forEach(MapperUtil::updateWeatherData);
+                userService.updateWeatherData(userDto);
                 context.setVariable("user", userDto);
                 templateEngine.process("authorized", context, resp.getWriter());
             }
