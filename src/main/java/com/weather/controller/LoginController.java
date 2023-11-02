@@ -28,6 +28,7 @@ import java.util.Optional;
 public class LoginController extends HttpServlet {
 
     private static final UserMapper userMapper = new UserMapper();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
@@ -56,7 +57,7 @@ public class LoginController extends HttpServlet {
             Optional<Session> session = sessionService.getSessionByUserId(optionalUser.get().getId());
             CookiesUtil.addCookie(resp, session.get());
 
-            UserDto userDto = userMapper.map(optionalUser.get());
+            UserDto userDto = optionalUser.map(userMapper::map).get();
 
             if (req.getParameter("name") != null) {
                 req.getRequestDispatcher("/add?userId=" + userDto.getId()).forward(req, resp);
