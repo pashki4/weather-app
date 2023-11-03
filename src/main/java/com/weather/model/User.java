@@ -25,7 +25,7 @@ public class User {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     @Setter(AccessLevel.PRIVATE)
-    private Set<Location> locations = new HashSet<>();
+    private List<Location> locations = new ArrayList<>();
 
     public void addLocation(Location location) {
         locations.add(location);
