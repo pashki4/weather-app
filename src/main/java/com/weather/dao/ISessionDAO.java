@@ -13,4 +13,6 @@ public interface ISessionDAO {
     void saveForUser(User user);
 
     Optional<Session> getSessionById(UUID uuid);
+
+    void removeByUserId(Long id);
 }

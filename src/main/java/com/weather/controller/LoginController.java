@@ -53,6 +53,7 @@ public class LoginController extends HttpServlet {
 
         if (optionalUser.isPresent() && BCrypt.checkpw(req.getParameter("loginPass"), optionalUser.get().getPassword())) {
             SessionService sessionService = new SessionService(new SessionDAO());
+            sessionService.remove(optionalUser.get().getId());
             sessionService.saveSession(optionalUser.get());
             Optional<Session> session = sessionService.getSessionByUserId(optionalUser.get().getId());
             CookiesUtil.addCookie(resp, session.get());

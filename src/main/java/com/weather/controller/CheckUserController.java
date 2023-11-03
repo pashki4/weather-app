@@ -18,8 +18,6 @@ import org.thymeleaf.web.IWebExchange;
 import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
@@ -51,7 +49,7 @@ public class CheckUserController extends HttpServlet {
                 SessionService sessionService = new SessionService(new SessionDAO());
                  session = sessionService.getSessionById(uuid);
                 if (session.isPresent()) {
-                    isSessionExpired = checkSession(session.get());
+                    isSessionExpired = sessionService.isSessionExpired(session.get());
                 }
             }
         }
@@ -66,9 +64,5 @@ public class CheckUserController extends HttpServlet {
             context.setVariable("user", userDto);
             templateEngine.process("authorized", context, resp.getWriter());
         }
-    }
-
-    private boolean checkSession(Session session) {
-        return session.getExpiresAt().isBefore(LocalDateTime.now(ZoneId.of("UTC")));
     }
 }

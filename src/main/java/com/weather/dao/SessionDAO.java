@@ -69,4 +69,21 @@ public class SessionDAO implements ISessionDAO {
             entityManager.close();
         }
     }
+
+    @Override
+    public void removeByUserId(Long userId) {
+        EntityManager entityManager = emf.createEntityManager();
+        entityManager.getTransaction().begin();
+        try {
+            entityManager.createQuery("DELETE FROM Session s WHERE s.user.id =: id")
+                    .setParameter("id", userId)
+                    .executeUpdate();
+            entityManager.getTransaction().commit();
+        } catch (RuntimeException e) {
+            entityManager.getTransaction().rollback();
+            throw new SessionDaoException(String.format("Error performing dao operation removeByUserId( %d )", userId), e);
+        } finally {
+            entityManager.close();
+        }
+    }
 }
