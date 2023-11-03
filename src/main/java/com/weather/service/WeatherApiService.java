@@ -20,6 +20,7 @@ import static com.weather.util.PropertiesUtil.get;
 
 public class WeatherApiService {
 
+    public static final ObjectMapper MAPPER = new ObjectMapper();
     private static final String SEARCH_URL = "http://api.openweathermap.org/geo/1.0/direct?q=";
     private static final String SEARCH_LIMIT = "5";
     private static final String WEATHER_DATA_URL = "https://api.openweathermap.org/data/2.5/weather?";
@@ -51,9 +52,8 @@ public class WeatherApiService {
 
     private static WeatherData mapWeatherData(HttpResponse<String> response) {
         String body = response.body();
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            JsonNode treeNode = mapper.readTree(body);
+            JsonNode treeNode = MAPPER.readTree(body);
             String main = treeNode.get("weather").get(0).get("main").asText();
             String description = treeNode.get("weather").get(0).get("description").asText();
             String icon = treeNode.get("weather").get(0).get("icon").asText();
