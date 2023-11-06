@@ -1,8 +1,8 @@
 package com.weather.controller;
 
 import com.weather.config.ThymeleafConfiguration;
-import com.weather.dao.SessionDAO;
-import com.weather.dao.UserDAO;
+import com.weather.dao.SessionDao;
+import com.weather.dao.UserDao;
 import com.weather.exception.UserDaoException;
 import com.weather.model.Session;
 import com.weather.model.User;
@@ -44,8 +44,8 @@ public class SignupController extends HttpServlet {
         WebContext context = new WebContext(webExchange);
 
         User user = getUser(req);
-        UserService userService = new UserService(new UserDAO());
-        SessionService sessionService = new SessionService(new SessionDAO());
+        UserService userService = new UserService(new UserDao());
+        SessionService sessionService = new SessionService(new SessionDao());
         try {
             userService.save(user);
             sessionService.saveSession(user);

@@ -1,8 +1,8 @@
 package com.weather.controller;
 
 import com.weather.config.ThymeleafConfiguration;
-import com.weather.dao.SessionDAO;
-import com.weather.dao.UserDAO;
+import com.weather.dao.SessionDao;
+import com.weather.dao.UserDao;
 import com.weather.dto.UserDto;
 import com.weather.mapper.UserMapper;
 import com.weather.model.Session;
@@ -48,11 +48,11 @@ public class LoginController extends HttpServlet {
         WebContext context = new WebContext(webExchange);
 
         String login = req.getParameter("loginUserName").toLowerCase();
-        UserService userService = new UserService(new UserDAO());
+        UserService userService = new UserService(new UserDao());
         Optional<User> optionalUser = userService.getByLogin(login);
 
         if (optionalUser.isPresent() && BCrypt.checkpw(req.getParameter("loginPass"), optionalUser.get().getPassword())) {
-            SessionService sessionService = new SessionService(new SessionDAO());
+            SessionService sessionService = new SessionService(new SessionDao());
             sessionService.remove(optionalUser.get().getId());
             sessionService.saveSession(optionalUser.get());
             Optional<Session> session = sessionService.getSessionByUserId(optionalUser.get().getId());

@@ -1,7 +1,7 @@
 package com.weather.controller;
 
 import com.weather.config.ThymeleafConfiguration;
-import com.weather.dao.UserDAO;
+import com.weather.dao.UserDao;
 import com.weather.dto.UserDto;
 import com.weather.service.UserService;
 import jakarta.servlet.annotation.WebServlet;
@@ -29,7 +29,7 @@ public class RemoveLocationController extends HttpServlet {
         Long userId = Long.valueOf(req.getParameter("userId"));
         Long locationId = Long.valueOf(req.getParameter("locationId"));
 
-        UserService userService = new UserService(new UserDAO());
+        UserService userService = new UserService(new UserDao());
         userService.removeLocation(userId, locationId);
         Optional<UserDto> userDto = userService.getById(userId);
         userDto.ifPresent(userService::updateWeatherData);

@@ -1,6 +1,6 @@
 package com.weather.service;
 
-import com.weather.dao.ISessionDAO;
+import com.weather.dao.ISessionDao;
 import com.weather.model.Session;
 import com.weather.model.User;
 
@@ -10,9 +10,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class SessionService {
-    private final ISessionDAO sessionDAO;
+    private final ISessionDao sessionDAO;
 
-    public SessionService(ISessionDAO sessionDAO) {
+    public SessionService(ISessionDao sessionDAO) {
         this.sessionDAO = sessionDAO;
     }
 
@@ -29,7 +29,7 @@ public class SessionService {
     }
 
     public boolean isSessionExpired(Session session) {
-        return !session.getExpiresAt().isBefore(LocalDateTime.now(ZoneId.of("UTC")));
+        return session.getExpiresAt().isBefore(LocalDateTime.now());
     }
 
     public void remove(Long id) {

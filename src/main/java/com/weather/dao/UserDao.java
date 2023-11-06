@@ -10,14 +10,13 @@ import org.hibernate.Session;
 
 import java.util.Optional;
 
-public class UserDAO implements IUserDAO {
+public class UserDao implements IUserDao {
 
-    private static final EntityManagerFactory emf
-            = Persistence.createEntityManagerFactory("postgres");
+    private final EntityManagerFactory EMF = Persistence.createEntityManagerFactory("postgres");
 
     @Override
     public Optional<User> getByIdFetch(Long id) {
-        EntityManager entityManager = emf.createEntityManager();
+        EntityManager entityManager = EMF.createEntityManager();
         entityManager.unwrap(Session.class).setDefaultReadOnly(true);
         entityManager.getTransaction().begin();
         try {
@@ -37,7 +36,7 @@ public class UserDAO implements IUserDAO {
 
     @Override
     public void save(User user) {
-        EntityManager entityManager = emf.createEntityManager();
+        EntityManager entityManager = EMF.createEntityManager();
         entityManager.getTransaction().begin();
         try {
             entityManager.persist(user);
@@ -52,7 +51,7 @@ public class UserDAO implements IUserDAO {
 
     @Override
     public Optional<User> getByLoginFetch(String login) {
-        EntityManager entityManager = emf.createEntityManager();
+        EntityManager entityManager = EMF.createEntityManager();
         entityManager.unwrap(Session.class).setDefaultReadOnly(true);
         entityManager.getTransaction().begin();
         try {
@@ -72,7 +71,7 @@ public class UserDAO implements IUserDAO {
 
     @Override
     public void addLocation(Long id, Location location) {
-        EntityManager entityManager = emf.createEntityManager();
+        EntityManager entityManager = EMF.createEntityManager();
         entityManager.getTransaction().begin();
         try {
             User referenceUser = entityManager.getReference(User.class, id);
@@ -89,7 +88,7 @@ public class UserDAO implements IUserDAO {
 
     @Override
     public void removeLocation(Long userId, Long locationId) {
-        EntityManager entityManager = emf.createEntityManager();
+        EntityManager entityManager = EMF.createEntityManager();
         Location location = getLocation(locationId);
         entityManager.getTransaction().begin();
         try {

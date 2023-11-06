@@ -1,7 +1,7 @@
 package com.weather.controller;
 
 import com.weather.config.ThymeleafConfiguration;
-import com.weather.dao.UserDAO;
+import com.weather.dao.UserDao;
 import com.weather.dto.UserDto;
 import com.weather.model.Location;
 import com.weather.service.WeatherApiService;
@@ -41,7 +41,7 @@ public class SearchController extends HttpServlet {
         String userId = req.getParameter("userId");
         if (userId != null) {
             long id = Long.parseLong(userId);
-            UserService userService = new UserService(new UserDAO());
+            UserService userService = new UserService(new UserDao());
             Optional<UserDto> userDto = userService.getById(id);
             context.setVariable("user", userDto.get());
             templateEngine.process("authorized", context, resp.getWriter());

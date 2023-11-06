@@ -1,7 +1,7 @@
 package com.weather.controller;
 
 import com.weather.config.ThymeleafConfiguration;
-import com.weather.dao.UserDAO;
+import com.weather.dao.UserDao;
 import com.weather.dto.UserDto;
 import com.weather.model.Location;
 import com.weather.service.UserService;
@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 public class AddLocationController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+
         TemplateEngine templateEngine = (TemplateEngine) getServletContext().getAttribute(
                 ThymeleafConfiguration.TEMPLATE_ENGINE_ATTR);
         IWebExchange webExchange = JakartaServletWebApplication.buildApplication(getServletContext())
@@ -35,7 +36,7 @@ public class AddLocationController extends HttpServlet {
             templateEngine.process("login", context, resp.getWriter());
         } else {
             Long userId = Long.valueOf(req.getParameter("userId"));
-            UserService userService = new UserService(new UserDAO());
+            UserService userService = new UserService(new UserDao());
             try {
                 userService.addLocation(userId, location);
                 UserDto userDto = userService.getById(userId).get();

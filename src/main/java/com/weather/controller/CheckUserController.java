@@ -1,8 +1,8 @@
 package com.weather.controller;
 
 import com.weather.config.ThymeleafConfiguration;
-import com.weather.dao.SessionDAO;
-import com.weather.dao.UserDAO;
+import com.weather.dao.SessionDao;
+import com.weather.dao.UserDao;
 import com.weather.dto.UserDto;
 import com.weather.model.Session;
 import com.weather.service.SessionService;
@@ -46,7 +46,7 @@ public class CheckUserController extends HttpServlet {
 
             if (weatherId.isPresent()) {
                 uuid = UUID.fromString(weatherId.get().getValue());
-                SessionService sessionService = new SessionService(new SessionDAO());
+                SessionService sessionService = new SessionService(new SessionDao());
                  session = sessionService.getSessionById(uuid);
                 if (session.isPresent()) {
                     isSessionExpired = sessionService.isSessionExpired(session.get());
@@ -57,7 +57,7 @@ public class CheckUserController extends HttpServlet {
         if (uuid == null || isSessionExpired) {
             templateEngine.process("no-authorized", context, resp.getWriter());
         } else {
-            UserService userService = new UserService(new UserDAO());
+            UserService userService = new UserService(new UserDao());
             UserDto userDto = userService.getById(session.get().getUser().getId()).get();
             userService.updateWeatherData(userDto);
 
