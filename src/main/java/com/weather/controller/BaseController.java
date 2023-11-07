@@ -52,8 +52,4 @@ public class BaseController extends HttpServlet {
         return Arrays.stream(req.getCookies())
                 .anyMatch(c -> c.getName().equals("weather_id"));
     }
-
-
-
-
 }
