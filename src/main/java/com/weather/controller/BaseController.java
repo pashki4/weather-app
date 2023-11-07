@@ -2,8 +2,12 @@ package com.weather.controller;
 
 import com.weather.dao.SessionDao;
 import com.weather.dao.UserDao;
+import com.weather.dto.UserDto;
+import com.weather.mapper.UserMapper;
+import com.weather.model.Session;
 import com.weather.service.SessionService;
 import com.weather.service.UserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,6 +20,8 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Optional;
+import java.util.UUID;
 
 public class BaseController extends HttpServlet {
 
@@ -23,6 +29,8 @@ public class BaseController extends HttpServlet {
 
     protected SessionService sessionService = new SessionService(new SessionDao());
     protected UserService userService = new UserService(new UserDao());
+
+    private UserMapper userMapper = new UserMapper();
 
 
     @Override
@@ -48,8 +56,36 @@ public class BaseController extends HttpServlet {
         templateEngine.process(template, webContext, resp.getWriter());
     }
 
-    protected boolean isThereTheCookie(HttpServletRequest req) {
-        return Arrays.stream(req.getCookies())
+    protected boolean doesCookieExist(HttpServletRequest req) {
+        Cookie[] cookies = req.getCookies();
+        if (cookies == null) {
+            return false;
+        }
+        return Arrays.stream(cookies)
                 .anyMatch(c -> c.getName().equals("weather_id"));
+    }
+
+    protected boolean isSessionExpired(HttpServletRequest req) {
+        UUID uuid = getCookieId(req);
+        Optional<Session> session = sessionService.getSessionById(uuid);
+        return session
+                .map(value -> sessionService.isSessionExpired(value))
+                .orElse(true);
+    }
+
+    protected Optional<UserDto> getUserBySessionId(HttpServletRequest req) {
+        UUID cookieId = getCookieId(req);
+        return sessionService.getSessionById(cookieId)
+                .map(Session::getUser)
+                .map(userMapper::map);
+    }
+
+    private UUID getCookieId(HttpServletRequest req) {
+        return Arrays.stream(req.getCookies())
+                .filter(c -> c.getName().equals("weather_id"))
+                .map(Cookie::getValue)
+                .map(UUID::fromString)
+                .findAny()
+                .get();
     }
 }

@@ -1,5 +1,6 @@
 package com.weather.dao;
 
+import com.weather.dto.UserDto;
 import com.weather.exception.UserDaoException;
 import com.weather.model.Location;
 import com.weather.model.User;
@@ -9,6 +10,7 @@ import jakarta.persistence.Persistence;
 import org.hibernate.Session;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public class UserDao implements IUserDao {
 

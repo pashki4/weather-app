@@ -26,27 +26,11 @@
             <div class="col">
                 <form th:action="@{/search}" th:method="POST">
                     <div class="input-group mb-3">
-                        <input
-                                type="text"
-                                name="query"
-                                id="query"
-                                class="form-control"
-                                placeholder="Search..."
-                                aria-label="searchQuery"
-                                aria-describedby="button-addon2"
-                                required
-                        />
-                        <input
-                                type="hidden"
-                                id="userId"
-                                name="userId"
-                                th:value="${user.id}"
-                        />
-                        <button
-                                class="btn btn-outline-secondary"
-                                type="submit"
-                                id="button-addon2"
-                        >
+                        <input type="text" name="query" id="query" class="form-control" placeholder="Search..."
+                               aria-label="searchQuery" aria-describedby="button-addon2" required/>
+                        <input type="hidden" id="userId" name="userId" th:value="${user.id}"/>
+
+                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
                             <i class="bi bi-search"></i>
                         </button>
                     </div>
@@ -54,7 +38,7 @@
             </div>
 
             <div class="col">
-                <form th:action="@{/logout}" th:method="post">
+                <form th:action="@{/logout}" th:method="POST">
                     <span th:text="${user.login}"></span>
                     <button class="btn btn-outline-primary">Log out</button>
                 </form>

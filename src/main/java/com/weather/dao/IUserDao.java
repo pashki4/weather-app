@@ -1,9 +1,11 @@
 package com.weather.dao;
 
+import com.weather.dto.UserDto;
 import com.weather.model.Location;
 import com.weather.model.User;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public interface IUserDao {
     Optional<User> getByIdFetch(Long id);

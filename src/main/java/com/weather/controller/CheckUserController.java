@@ -20,35 +20,15 @@ import java.util.UUID;
 public class CheckUserController extends BaseController {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Cookie[] cookies = req.getCookies();
-        boolean isSessionExpired = true;
-        UUID uuid = null;
-
-        Optional<Session> session = Optional.empty();
-        if (cookies != null) {
-            Optional<Cookie> weatherId = Arrays.stream(cookies)
-                    .filter(cookie -> cookie.getName().equals("weather_id"))
-                    .findAny();
-
-            if (weatherId.isPresent()) {
-                uuid = UUID.fromString(weatherId.get().getValue());
-                SessionService sessionService = new SessionService(new SessionDao());
-                session = sessionService.getSessionById(uuid);
-                if (session.isPresent()) {
-                    isSessionExpired = sessionService.isSessionExpired(session.get());
-                }
+        if (doesCookieExist(req) && !isSessionExpired(req)) {
+            Optional<UserDto> user = getUserBySessionId(req);
+            user.ifPresent(userService::updateWeatherData);
+            if (user.isPresent()) {
+                req.setAttribute("user", user.get());
+                processTemplate("authorized", req, resp);
             }
-        }
-
-        if (uuid == null || isSessionExpired) {
-            processTemplate("no-authorized", req, resp);
         } else {
-            UserService userService = new UserService(new UserDao());
-            UserDto userDto = userService.getById(session.get().getUser().getId()).get();
-            userService.updateWeatherData(userDto);
-
-            req.setAttribute("user", userDto);
-            processTemplate("authorized", req, resp);
+            processTemplate("no-authorized", req, resp);
         }
     }
 }
