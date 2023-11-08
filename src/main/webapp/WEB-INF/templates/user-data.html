@@ -16,7 +16,6 @@
                     <td>
                         <form th:method="POST" th:action="@{/remove}">
                             <input type="hidden" name="locationId" th:value="${location.id}"/>
-                            <input th:if="${user} != null" type="hidden" name="userId" th:value="${user.id}"/>
                             <button type="submit" class="btn btn-danger"><i class="bi bi-trash3"></i></button>
                         </form>
                     </td>

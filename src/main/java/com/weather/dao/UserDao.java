@@ -101,7 +101,7 @@ public class UserDao implements IUserDao {
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new UserDaoException(String.format("Error performing removeLocation( %d, %d)", userId, location.getId()), e);
+            throw new UserDaoException(String.format("Error performing removeLocation(%d, %d)", userId, location.getId()), e);
         } finally {
             entityManager.close();
         }
