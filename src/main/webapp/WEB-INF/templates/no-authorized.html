@@ -19,7 +19,6 @@
 <header class="my-3">
     <div class="container-fluid">
         <div class="row">
-
             <div class="col" style="text-align: center">
                 <a href="./">Weather app</a>
             </div>
@@ -27,22 +26,11 @@
             <div class="col">
                 <form th:action="@{/search}" th:method="POST">
                     <div class="input-group mb-3">
-                        <input
-                                type="text"
-                                name="query"
-                                id="query"
-                                class="form-control"
-                                placeholder="Search..."
-                                aria-label="searchQuery"
-                                aria-describedby="button-addon2"
-                                required
+                        <input type="text" name="query" id="query" class="form-control" placeholder="Search..."
+                               aria-label="searchQuery" aria-describedby="button-addon2" required
                         />
 
-                        <button
-                                class="btn btn-outline-secondary"
-                                type="submit"
-                                id="button-addon2"
-                        >
+                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">
                             <i class="bi bi-search"></i>
                         </button>
                     </div>
@@ -59,29 +47,17 @@
                             <div class="text-center">
                                 <form style="max-width: 300px; margin: auto" th:action="@{/login}" class="credentials"
                                       th:method="POST">
-                                    <img
-                                            class="mt-4 mb-4"
-                                            src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png"
-                                            alt="bootstraplogo"
-                                            height="72"
+                                    <img class="mt-4 mb-4"
+                                         src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png"
+                                         alt="bootstraplogo" height="72"
                                     />
                                     <h1 class="h3 mb-3 font-weight-normal">Log in</h1>
-                                    <input
-                                            type="text"
-                                            name="loginUserName"
-                                            id="loginUserName"
-                                            class="form-control"
-                                            placeholder="Login"
-                                            required
-                                            autofocus
+                                    <input type="text" name="loginUserName" id="loginUserName" class="form-control"
+                                           placeholder="Login" required autofocus
                                     />
-                                    <input
-                                            type="password"
-                                            name="loginPass"
-                                            id="loginPass"
-                                            class="form-control"
-                                            placeholder="Password"
-                                            required
+                                    <input type="password" name="loginPass" id="loginPass" class="form-control"
+                                           placeholder="Password"
+                                           required
                                     />
                                     <div th:if="${errorMessage}" class="error-message">
                                         <span style="color:red" th:text="${errorMessage}"></span>
@@ -105,32 +81,19 @@
                         <div class="modal-content">
                             <div class="text-center">
                                 <form style="max-width: 300px; margin: auto" th:action="@{/signup}" th:method="POST">
-                                    <img
-                                            class="mt-4 mb-4"
-                                            src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png"
-                                            alt="bootstraplogo"
-                                            height="72"
+                                    <img class="mt-4 mb-4"
+                                         src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png"
+                                         alt="bootstraplogo" height="72"
                                     />
                                     <h1 class="h3 mb-3 font-weight-normal">Sign Up</h1>
-                                    <input
-                                            type="text"
-                                            name="signUpUserName"
-                                            id="signUpUserName"
-                                            class="form-control"
-                                            placeholder="Login"
-                                            required
-                                            autofocus
+                                    <input type="text" name="signUpUserName" id="signUpUserName" class="form-control"
+                                           placeholder="Login" required autofocus
                                     />
-                                    <input
-                                            type="password"
-                                            name="signPass"
-                                            id="signPass"
-                                            class="form-control"
-                                            placeholder="Password"
-                                            required
+                                    <input type="password" name="signPass" id="signPass" class="form-control"
+                                           placeholder="Password" required
                                     />
                                     <div th:if="${errorMessage}" class="error-message">
-                                        <span style="color:red"><p th:text="${errorMessage}"></p></span>
+                                        <p class="text-danger" th:text="${errorMessage}"></p>
                                     </div>
                                     <div class="mt-3">
                                         <button class="btn btn-primary btn-md w-100">Sign Up</button>

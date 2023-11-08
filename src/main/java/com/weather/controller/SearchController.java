@@ -26,10 +26,12 @@ public class SearchController extends BaseController {
 
         if (hasCookie(req) && isSessionActive(req)) {
             Optional<UserDto> user = getUserBySessionId(req);
-            user.ifPresent(userService::updateWeatherData);
             if (user.isPresent()) {
+                user.ifPresent(userService::updateWeatherData);
                 req.setAttribute("user", user.get());
                 processTemplate("authorized", req, resp);
+            } else {
+                processTemplate("no-authorized", req, resp);
             }
         } else {
             processTemplate("no-authorized", req, resp);

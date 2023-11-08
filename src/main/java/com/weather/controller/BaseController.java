@@ -26,11 +26,9 @@ import java.util.UUID;
 public class BaseController extends HttpServlet {
 
     private TemplateEngine templateEngine;
-
     protected SessionService sessionService = new SessionService(new SessionDao());
     protected UserService userService = new UserService(new UserDao());
     private final UserMapper userMapper = new UserMapper();
-
 
     @Override
     public void init() {
