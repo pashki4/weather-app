@@ -1,9 +1,7 @@
 package com.weather.controller;
 
-import com.weather.dao.UserDao;
 import com.weather.dto.UserDto;
 import com.weather.model.Location;
-import com.weather.service.UserService;
 import com.weather.service.WeatherApiService;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,13 +24,13 @@ public class SearchController extends BaseController {
             throw new RuntimeException("Error searching location", e);
         }
 
-        String userId = req.getParameter("userId");
-        if (userId != null) {
-            long id = Long.parseLong(userId);
-            UserService userService = new UserService(new UserDao());
-            Optional<UserDto> userDto = userService.getById(id);
-            req.setAttribute("user", userDto.get());
-            processTemplate("authorized", req, resp);
+        if (hasCookie(req) && isSessionActive(req)) {
+            Optional<UserDto> user = getUserBySessionId(req);
+            user.ifPresent(userService::updateWeatherData);
+            if (user.isPresent()) {
+                req.setAttribute("user", user.get());
+                processTemplate("authorized", req, resp);
+            }
         } else {
             processTemplate("no-authorized", req, resp);
         }

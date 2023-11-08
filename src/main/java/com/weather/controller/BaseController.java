@@ -29,8 +29,7 @@ public class BaseController extends HttpServlet {
 
     protected SessionService sessionService = new SessionService(new SessionDao());
     protected UserService userService = new UserService(new UserDao());
-
-    private UserMapper userMapper = new UserMapper();
+    private final UserMapper userMapper = new UserMapper();
 
 
     @Override
@@ -56,7 +55,7 @@ public class BaseController extends HttpServlet {
         templateEngine.process(template, webContext, resp.getWriter());
     }
 
-    protected boolean doesCookieExist(HttpServletRequest req) {
+    protected boolean hasCookie(HttpServletRequest req) {
         Cookie[] cookies = req.getCookies();
         if (cookies == null) {
             return false;
@@ -65,12 +64,12 @@ public class BaseController extends HttpServlet {
                 .anyMatch(c -> c.getName().equals("weather_id"));
     }
 
-    protected boolean isSessionExpired(HttpServletRequest req) {
+    protected boolean isSessionActive(HttpServletRequest req) {
         UUID uuid = getCookieId(req);
         Optional<Session> session = sessionService.getSessionById(uuid);
         return session
-                .map(value -> sessionService.isSessionExpired(value))
-                .orElse(true);
+                .map(sessionService::isSessionActive)
+                .orElse(false);
     }
 
     protected Optional<UserDto> getUserBySessionId(HttpServletRequest req) {

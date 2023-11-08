@@ -5,7 +5,6 @@ import com.weather.model.Session;
 import com.weather.model.User;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,8 +27,8 @@ public class SessionService {
         sessionDAO.saveForUser(user);
     }
 
-    public boolean isSessionExpired(Session session) {
-        return session.getExpiresAt().isBefore(LocalDateTime.now());
+    public boolean isSessionActive(Session session) {
+        return LocalDateTime.now().isBefore(session.getExpiresAt());
     }
 
     public void remove(Long id) {
