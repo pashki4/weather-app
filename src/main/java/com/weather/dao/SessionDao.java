@@ -21,8 +21,8 @@ public class SessionDao implements ISessionDao {
         entityManager.getTransaction().begin();
         try {
             Optional<Session> session = entityManager
-                    .createQuery("SELECT s FROM Session s WHERE s.user.id =: id " +
-                                 "ORDER BY s.expiresAt DESC LIMIT 1", Session.class)
+                    .createQuery("SELECT s FROM Session s WHERE s.user.id =: id "
+                                 + "ORDER BY s.expiresAt DESC LIMIT 1", Session.class)
                     .setParameter("id", userId)
                     .getResultStream()
                     .findAny();

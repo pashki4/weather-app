@@ -7,7 +7,6 @@ import com.weather.model.Location;
 import com.weather.model.User;
 
 import java.util.Optional;
-import java.util.UUID;
 
 public class UserService {
     private final IUserDao userDAO;

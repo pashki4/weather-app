@@ -1,6 +1,5 @@
 package com.weather.dao;
 
-import com.weather.dto.UserDto;
 import com.weather.exception.UserDaoException;
 import com.weather.model.Location;
 import com.weather.model.User;
@@ -10,7 +9,6 @@ import jakarta.persistence.Persistence;
 import org.hibernate.Session;
 
 import java.util.Optional;
-import java.util.UUID;
 
 public class UserDao implements IUserDao {
 
@@ -45,7 +43,7 @@ public class UserDao implements IUserDao {
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new UserDaoException(String.format("Error performing save( %s )", user), e);
+            throw new UserDaoException(String.format("Error performing save(%s)", user), e);
         } finally {
             entityManager.close();
         }
@@ -58,7 +56,8 @@ public class UserDao implements IUserDao {
         entityManager.getTransaction().begin();
         try {
             User user = entityManager
-                    .createQuery("SELECT u FROM User u LEFT JOIN FETCH u.locations WHERE u.login =: login", User.class)
+                    .createQuery("SELECT u FROM User u LEFT JOIN FETCH u.locations WHERE u.login =: login",
+                            User.class)
                     .setParameter("login", login)
                     .getSingleResult();
             entityManager.getTransaction().commit();
@@ -82,7 +81,7 @@ public class UserDao implements IUserDao {
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new UserDaoException(String.format("Error performing addLocation( %d, %s ) ", id, location), e);
+            throw new UserDaoException(String.format("Error performing addLocation(%d, %s)", id, location), e);
         } finally {
             entityManager.close();
         }

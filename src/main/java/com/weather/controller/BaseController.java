@@ -28,12 +28,12 @@ public class BaseController extends HttpServlet {
     private TemplateEngine templateEngine;
     protected SessionService sessionService = new SessionService(new SessionDao());
     protected UserService userService = new UserService(new UserDao());
-    private final UserMapper userMapper = new UserMapper();
+    protected static final UserMapper USER_MAPPER = new UserMapper();
 
     @Override
     public void init() {
-        JakartaServletWebApplication application
-                = JakartaServletWebApplication.buildApplication(getServletContext());
+        JakartaServletWebApplication application =
+                JakartaServletWebApplication.buildApplication(getServletContext());
         WebApplicationTemplateResolver templateResolver = new WebApplicationTemplateResolver(application);
         templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setPrefix("/WEB-INF/templates/");
@@ -47,8 +47,8 @@ public class BaseController extends HttpServlet {
 
     protected void processTemplate(String template, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html;charset=UTF-8");
-        IServletWebExchange iServletWebExchange
-                = JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(req, resp);
+        IServletWebExchange iServletWebExchange =
+                JakartaServletWebApplication.buildApplication(getServletContext()).buildExchange(req, resp);
         WebContext webContext = new WebContext(iServletWebExchange);
         templateEngine.process(template, webContext, resp.getWriter());
     }
@@ -74,7 +74,7 @@ public class BaseController extends HttpServlet {
         UUID cookieId = getCookieId(req);
         return sessionService.getSessionById(cookieId)
                 .map(Session::getUser)
-                .map(userMapper::map);
+                .map(USER_MAPPER::map);
     }
 
     private UUID getCookieId(HttpServletRequest req) {

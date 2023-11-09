@@ -1,41 +1,45 @@
 package com.weather.controller;
 
-import com.weather.dao.UserDao;
 import com.weather.dto.UserDto;
 import com.weather.model.Location;
-import com.weather.service.UserService;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @WebServlet("/add")
 public class AddLocationController extends BaseController {
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doPost(req, resp);
+    }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         Location location = mapLocation(req);
 
-        if (req.getParameter("userId") == null) {
+        if (!hasCookie(req) || !isSessionActive(req)) {
             req.setAttribute("name", location.getName());
             req.setAttribute("latitude", location.getLatitude());
             req.setAttribute("longitude", location.getLongitude());
             processTemplate("login", req, resp);
         } else {
-            Long userId = Long.valueOf(req.getParameter("userId"));
-            UserService userService = new UserService(new UserDao());
+            Optional<UserDto> user = getUserBySessionId(req);
             try {
-                userService.addLocation(userId, location);
-                UserDto userDto = userService.getById(userId).get();
-                userService.updateWeatherData(userDto);
-                req.setAttribute("user", userDto);
+                user.ifPresent(u -> u.getLocations().add(location));
+                userService.updateWeatherData(user.get());
+                userService.addLocation(user.get().getId(), location);
+                req.setAttribute("user", user.get());
                 processTemplate("authorized", req, resp);
             } catch (RuntimeException e) {
-                UserDto userDto = userService.getById(userId).get();
-                userService.updateWeatherData(userDto);
-                req.setAttribute("user", userDto);
+                userService.updateWeatherData(user.get());
+                req.setAttribute("user", user.get());
                 processTemplate("authorized", req, resp);
             }
         }
