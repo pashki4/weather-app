@@ -28,30 +28,14 @@
     <form style="max-width: 300px; margin: auto" th:action="@{/login(name=${param.name},
          latitude=${param.latitude}, longitude=${param.longitude})}" class="credentials"
           th:method="POST">
-        <a href="./"> <img
-                class="mt-4 mb-4"
-                src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png"
-                alt="bootstraplogo"
-                height="72"
-        /></a>
+        <a href="./"><img class="mt-4 mb-4"
+                          src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png"
+                          alt="bootstraplogo" height="72"/>
+        </a>
         <h1 class="h3 mb-3 font-weight-normal">Log in</h1>
-        <input
-                type="text"
-                name="loginUserName"
-                id="loginUserName"
-                class="form-control"
-                placeholder="Login"
-                required
-                autofocus
-        />
-        <input
-                type="password"
-                name="loginPass"
-                id="loginPass"
-                class="form-control"
-                placeholder="Password"
-                required
-        />
+        <input type="text" id="loginUserName" name="loginUserName" class="form-control" placeholder="Login" required
+               autofocus/>
+        <input type="password" name="loginPass" id="loginPass" class="form-control" placeholder="Password" required/>
 
         <div th:if="${errorMessage}" class="error-message">
             <p class="text-danger" th:text="${errorMessage}"></p>

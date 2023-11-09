@@ -11,9 +11,11 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static com.weather.util.PropertiesUtil.get;
@@ -21,9 +23,9 @@ import static com.weather.util.PropertiesUtil.get;
 public class WeatherApiService {
 
     public static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final String SEARCH_URL = "http://api.openweathermap.org/geo/1.0/direct?q=";
-    private static final String SEARCH_LIMIT = "5";
-    private static final String WEATHER_DATA_URL = "https://api.openweathermap.org/data/2.5/weather?";
+    private static final String SEARCH_URL = "http://api.openweathermap.org/geo/1.0/direct";
+    private static final String SEARCH_LIMIT = "10";
+    private static final String WEATHER_DATA_URL = "https://api.openweathermap.org/data/2.5/weather";
     private static final String WEATHER_DATA_UNITS = "metric";
     private static final String WEATHER_DATA_LANG = "en";
 
@@ -81,14 +83,21 @@ public class WeatherApiService {
     }
 
     private static String createSearchLocationUrl(HttpServletRequest req) {
-        String city = req.getParameter("city").replace(" ", "+");
-        return SEARCH_URL + city + "&limit=" + SEARCH_LIMIT + "&appid=" + get("appid");
+        String query = URLEncoder.encode(req.getParameter("query"), StandardCharsets.UTF_8);
+        return SEARCH_URL
+               + "?q=" + query
+               + "&limit=" + SEARCH_LIMIT
+               + "&appid=" + get("appid");
     }
 
     private static String createWeatherDataUrl(Location location) {
         String latitude = String.valueOf(location.getLatitude());
         String longitude = String.valueOf(location.getLongitude());
-        return WEATHER_DATA_URL + "lat=" + latitude + "&lon=" + longitude + "&lang=" + WEATHER_DATA_LANG
-               + "&units=" + WEATHER_DATA_UNITS + "&appid=" + get("appid");
+        return WEATHER_DATA_URL
+               + "?lat=" + latitude
+               + "&lon=" + longitude
+               + "&lang=" + WEATHER_DATA_LANG
+               + "&units=" + WEATHER_DATA_UNITS
+               + "&appid=" + get("appid");
     }
 }

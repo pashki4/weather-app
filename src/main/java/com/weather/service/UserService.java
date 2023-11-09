@@ -1,6 +1,6 @@
 package com.weather.service;
 
-import com.weather.dao.IUserDAO;
+import com.weather.dao.IUserDao;
 import com.weather.dto.UserDto;
 import com.weather.mapper.UserMapper;
 import com.weather.model.Location;
@@ -9,10 +9,10 @@ import com.weather.model.User;
 import java.util.Optional;
 
 public class UserService {
-    private final IUserDAO userDAO;
+    private final IUserDao userDAO;
     private final UserMapper userMapper = new UserMapper();
 
-    public UserService(IUserDAO userDAO) {
+    public UserService(IUserDao userDAO) {
         this.userDAO = userDAO;
     }
 

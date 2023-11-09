@@ -5,7 +5,7 @@ import com.weather.model.User;
 
 import java.util.Optional;
 
-public interface IUserDAO {
+public interface IUserDao {
     Optional<User> getByIdFetch(Long id);
 
     void save(User user);

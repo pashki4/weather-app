@@ -6,24 +6,9 @@
 </head>
 <body>
 <div th:fragment="copy">
-    <input
-            th:type="hidden"
-            th:name="name"
-            th:id="name"
-            th:value="${location.name}"
-    />
-    <input
-            th:type="hidden"
-            th:name="latitude"
-            th:id="latitude"
-            th:value="${location.latitude}"
-    />
-    <input
-            th:type="hidden"
-            th:name="longitude"
-            th:id="longitude"
-            th:value="${location.longitude}"
-    />
+    <input th:type="hidden" th:name="name" th:id="name" th:value="${location.name}"/>
+    <input th:type="hidden" th:name="latitude" th:id="latitude" th:value="${location.latitude}"/>
+    <input th:type="hidden" th:name="longitude" th:id="longitude" th:value="${location.longitude}"/>
 </div>
 </body>
 </html>

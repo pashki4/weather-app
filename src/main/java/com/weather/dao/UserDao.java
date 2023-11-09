@@ -10,14 +10,13 @@ import org.hibernate.Session;
 
 import java.util.Optional;
 
-public class UserDAO implements IUserDAO {
+public class UserDao implements IUserDao {
 
-    private static final EntityManagerFactory emf
-            = Persistence.createEntityManagerFactory("postgres");
+    private final EntityManagerFactory EMF = Persistence.createEntityManagerFactory("postgres");
 
     @Override
     public Optional<User> getByIdFetch(Long id) {
-        EntityManager entityManager = emf.createEntityManager();
+        EntityManager entityManager = EMF.createEntityManager();
         entityManager.unwrap(Session.class).setDefaultReadOnly(true);
         entityManager.getTransaction().begin();
         try {
@@ -37,14 +36,14 @@ public class UserDAO implements IUserDAO {
 
     @Override
     public void save(User user) {
-        EntityManager entityManager = emf.createEntityManager();
+        EntityManager entityManager = EMF.createEntityManager();
         entityManager.getTransaction().begin();
         try {
             entityManager.persist(user);
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new UserDaoException(String.format("Error performing save( %s )", user), e);
+            throw new UserDaoException(String.format("Error performing save(%s)", user), e);
         } finally {
             entityManager.close();
         }
@@ -52,12 +51,13 @@ public class UserDAO implements IUserDAO {
 
     @Override
     public Optional<User> getByLoginFetch(String login) {
-        EntityManager entityManager = emf.createEntityManager();
+        EntityManager entityManager = EMF.createEntityManager();
         entityManager.unwrap(Session.class).setDefaultReadOnly(true);
         entityManager.getTransaction().begin();
         try {
             User user = entityManager
-                    .createQuery("SELECT u FROM User u LEFT JOIN FETCH u.locations WHERE u.login =: login", User.class)
+                    .createQuery("SELECT u FROM User u LEFT JOIN FETCH u.locations WHERE u.login =: login",
+                            User.class)
                     .setParameter("login", login)
                     .getSingleResult();
             entityManager.getTransaction().commit();
@@ -72,7 +72,7 @@ public class UserDAO implements IUserDAO {
 
     @Override
     public void addLocation(Long id, Location location) {
-        EntityManager entityManager = emf.createEntityManager();
+        EntityManager entityManager = EMF.createEntityManager();
         entityManager.getTransaction().begin();
         try {
             User referenceUser = entityManager.getReference(User.class, id);
@@ -81,7 +81,7 @@ public class UserDAO implements IUserDAO {
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new UserDaoException(String.format("Error performing addLocation( %d, %s ) ", id, location), e);
+            throw new UserDaoException(String.format("Error performing addLocation(%d, %s)", id, location), e);
         } finally {
             entityManager.close();
         }
@@ -89,7 +89,7 @@ public class UserDAO implements IUserDAO {
 
     @Override
     public void removeLocation(Long userId, Long locationId) {
-        EntityManager entityManager = emf.createEntityManager();
+        EntityManager entityManager = EMF.createEntityManager();
         Location location = getLocation(locationId);
         entityManager.getTransaction().begin();
         try {
@@ -100,7 +100,7 @@ public class UserDAO implements IUserDAO {
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new UserDaoException(String.format("Error performing removeLocation( %d, %d)", userId, location.getId()), e);
+            throw new UserDaoException(String.format("Error performing removeLocation(%d, %d)", userId, location.getId()), e);
         } finally {
             entityManager.close();
         }

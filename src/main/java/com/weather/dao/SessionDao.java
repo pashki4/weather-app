@@ -10,18 +10,19 @@ import jakarta.persistence.Persistence;
 import java.util.Optional;
 import java.util.UUID;
 
-public class SessionDAO implements ISessionDAO {
-    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("postgres");
+public class SessionDao implements ISessionDao {
+
+    private final EntityManagerFactory EMF = Persistence.createEntityManagerFactory("postgres");
 
     @Override
     public Optional<Session> getSessionByUserId(Long userId) {
-        EntityManager entityManager = emf.createEntityManager();
+        EntityManager entityManager = EMF.createEntityManager();
         entityManager.unwrap(org.hibernate.Session.class).setDefaultReadOnly(true);
         entityManager.getTransaction().begin();
         try {
             Optional<Session> session = entityManager
-                    .createQuery("SELECT s FROM Session s WHERE s.user.id =: id " +
-                                 "ORDER BY s.expiresAt DESC LIMIT 1", Session.class)
+                    .createQuery("SELECT s FROM Session s WHERE s.user.id =: id "
+                                 + "ORDER BY s.expiresAt DESC LIMIT 1", Session.class)
                     .setParameter("id", userId)
                     .getResultStream()
                     .findAny();
@@ -37,7 +38,7 @@ public class SessionDAO implements ISessionDAO {
 
     @Override
     public void saveForUser(User user) {
-        EntityManager entityManager = emf.createEntityManager();
+        EntityManager entityManager = EMF.createEntityManager();
         entityManager.getTransaction().begin();
         try {
             entityManager.createNativeQuery("INSERT INTO sessions(user_id) VALUES (?)")
@@ -55,7 +56,7 @@ public class SessionDAO implements ISessionDAO {
 
     @Override
     public Optional<Session> getSessionById(UUID uuid) {
-        EntityManager entityManager = emf.createEntityManager();
+        EntityManager entityManager = EMF.createEntityManager();
         entityManager.unwrap(org.hibernate.Session.class).setDefaultReadOnly(true);
         entityManager.getTransaction().begin();
         try {
@@ -65,6 +66,23 @@ public class SessionDAO implements ISessionDAO {
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
             throw new SessionDaoException(String.format("Cannot perform getSessionById( %s )", uuid), e);
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public void removeByUserId(Long userId) {
+        EntityManager entityManager = EMF.createEntityManager();
+        entityManager.getTransaction().begin();
+        try {
+            entityManager.createQuery("DELETE FROM Session s WHERE s.user.id =: id")
+                    .setParameter("id", userId)
+                    .executeUpdate();
+            entityManager.getTransaction().commit();
+        } catch (RuntimeException e) {
+            entityManager.getTransaction().rollback();
+            throw new SessionDaoException(String.format("Error performing dao operation removeByUserId( %d )", userId), e);
         } finally {
             entityManager.close();
         }

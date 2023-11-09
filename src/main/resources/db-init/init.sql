@@ -19,6 +19,8 @@ CREATE TABLE IF NOT EXISTS sessions
     CONSTRAINT sessions_users_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE 
 );
 
+CREATE INDEX idx_expire_at ON sessions (expires_at);
+
 CREATE TABLE IF NOT EXISTS locations
 (
     id        BIGSERIAL,
