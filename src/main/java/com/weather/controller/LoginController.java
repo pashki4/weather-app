@@ -24,21 +24,21 @@ public class LoginController extends BaseController {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Optional<User> optionalUser = USER_SERVICE.getByLogin(req.getParameter("loginUserName").toLowerCase());
+        Optional<User> optionalUser = userService.getByLogin(req.getParameter("loginUserName").toLowerCase());
         if (optionalUser.isPresent()
             && BCrypt.checkpw(req.getParameter("loginPass"), optionalUser.get().getPassword())) {
             Long userId = optionalUser.get().getId();
-            SESSION_SERVICE.remove(userId);
+            sessionService.remove(userId);
 
-            SESSION_SERVICE.saveSession(optionalUser.get());
-            Optional<Session> session = SESSION_SERVICE.getSessionByUserId(userId);
+            sessionService.saveSession(optionalUser.get());
+            Optional<Session> session = sessionService.getSessionByUserId(userId);
             session.ifPresent(s -> CookiesUtil.addCookie(resp, s));
 
             UserDto userDto = optionalUser.map(USER_MAPPER::map).orElseThrow();
             if (req.getParameter("name") != null && !req.getParameter("name").isEmpty()) {
                 resp.sendRedirect(req.getContextPath() + "/add" + addParameters(req));
             } else {
-                USER_SERVICE.updateWeatherData(userDto);
+                userService.updateWeatherData(userDto);
                 req.setAttribute("user", userDto);
                 processTemplate("authorized", req, resp);
             }

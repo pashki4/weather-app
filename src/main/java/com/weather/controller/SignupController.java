@@ -26,9 +26,9 @@ public class SignupController extends BaseController {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         User user = getUser(req);
         try {
-            USER_SERVICE.save(user);
-            SESSION_SERVICE.saveSession(user);
-            Optional<Session> session = SESSION_SERVICE.getSessionByUserId(user.getId());
+            userService.save(user);
+            sessionService.saveSession(user);
+            Optional<Session> session = sessionService.getSessionByUserId(user.getId());
             CookiesUtil.addCookie(resp, session.get());
 
             if (req.getParameter("name") != null && !req.getParameter("name").isEmpty()) {

@@ -12,11 +12,11 @@ import java.util.UUID;
 
 public class SessionDao implements ISessionDao {
 
-    private final EntityManagerFactory EMF = Persistence.createEntityManagerFactory("postgres");
+    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("postgres");
 
     @Override
     public Optional<Session> getSessionByUserId(Long userId) {
-        EntityManager entityManager = EMF.createEntityManager();
+        EntityManager entityManager = emf.createEntityManager();
         entityManager.unwrap(org.hibernate.Session.class).setDefaultReadOnly(true);
         entityManager.getTransaction().begin();
         try {
@@ -38,7 +38,7 @@ public class SessionDao implements ISessionDao {
 
     @Override
     public void saveForUser(User user) {
-        EntityManager entityManager = EMF.createEntityManager();
+        EntityManager entityManager = emf.createEntityManager();
         entityManager.getTransaction().begin();
         try {
             entityManager.createNativeQuery("INSERT INTO sessions(user_id) VALUES (?)")
@@ -56,7 +56,7 @@ public class SessionDao implements ISessionDao {
 
     @Override
     public Optional<Session> getSessionById(UUID uuid) {
-        EntityManager entityManager = EMF.createEntityManager();
+        EntityManager entityManager = emf.createEntityManager();
         entityManager.unwrap(org.hibernate.Session.class).setDefaultReadOnly(true);
         entityManager.getTransaction().begin();
         try {
@@ -73,7 +73,7 @@ public class SessionDao implements ISessionDao {
 
     @Override
     public void removeByUserId(Long userId) {
-        EntityManager entityManager = EMF.createEntityManager();
+        EntityManager entityManager = emf.createEntityManager();
         entityManager.getTransaction().begin();
         try {
             entityManager.createQuery("DELETE FROM Session s WHERE s.user.id =: id")

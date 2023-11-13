@@ -17,9 +17,9 @@ public class RemoveController extends BaseController {
             Long locationId = Long.valueOf(req.getParameter("locationId"));
             Optional<UserDto> user = getUserBySessionId(req);
             if (user.isPresent()) {
-                USER_SERVICE.removeLocation(user.get().getId(), locationId);
+                userService.removeLocation(user.get().getId(), locationId);
                 user.get().locations.remove(new Location(locationId));
-                user.ifPresent(USER_SERVICE::updateWeatherData);
+                user.ifPresent(userService::updateWeatherData);
                 req.setAttribute("user", user.get());
                 processTemplate("authorized", req, resp);
             } else {

@@ -12,11 +12,11 @@ import java.util.Optional;
 
 public class UserDao implements IUserDao {
 
-    private final EntityManagerFactory EMF = Persistence.createEntityManagerFactory("postgres");
+    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("postgres");
 
     @Override
     public Optional<User> getByIdFetch(Long id) {
-        EntityManager entityManager = EMF.createEntityManager();
+        EntityManager entityManager = emf.createEntityManager();
         entityManager.unwrap(Session.class).setDefaultReadOnly(true);
         entityManager.getTransaction().begin();
         try {
@@ -36,7 +36,7 @@ public class UserDao implements IUserDao {
 
     @Override
     public void save(User user) {
-        EntityManager entityManager = EMF.createEntityManager();
+        EntityManager entityManager = emf.createEntityManager();
         entityManager.getTransaction().begin();
         try {
             entityManager.persist(user);
@@ -51,7 +51,7 @@ public class UserDao implements IUserDao {
 
     @Override
     public Optional<User> getByLoginFetch(String login) {
-        EntityManager entityManager = EMF.createEntityManager();
+        EntityManager entityManager = emf.createEntityManager();
         entityManager.unwrap(Session.class).setDefaultReadOnly(true);
         entityManager.getTransaction().begin();
         try {
@@ -72,7 +72,7 @@ public class UserDao implements IUserDao {
 
     @Override
     public void addLocation(Long id, Location location) {
-        EntityManager entityManager = EMF.createEntityManager();
+        EntityManager entityManager = emf.createEntityManager();
         entityManager.getTransaction().begin();
         try {
             User referenceUser = entityManager.getReference(User.class, id);
@@ -89,7 +89,7 @@ public class UserDao implements IUserDao {
 
     @Override
     public void removeLocation(Long userId, Long locationId) {
-        EntityManager entityManager = EMF.createEntityManager();
+        EntityManager entityManager = emf.createEntityManager();
         Location location = getLocation(locationId);
         entityManager.getTransaction().begin();
         try {
