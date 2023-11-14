@@ -7,6 +7,7 @@ import com.weather.model.Location;
 import com.weather.model.User;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import java.util.Comparator;
 import java.util.Optional;
 
 public class UserService {

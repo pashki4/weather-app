@@ -11,7 +11,11 @@ import java.util.UUID;
 
 public class SessionDao implements ISessionDao {
 
-    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("postgres");
+    private final EntityManagerFactory emf;
+
+    public SessionDao(String persistenceUnitName) {
+        this.emf = Persistence.createEntityManagerFactory(persistenceUnitName);
+    }
 
     @Override
     public Optional<Session> getSessionByUserId(Long userId) {

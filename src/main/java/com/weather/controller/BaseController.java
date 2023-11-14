@@ -5,7 +5,6 @@ import com.weather.dao.UserDao;
 import com.weather.dto.UserDto;
 import com.weather.mapper.UserMapper;
 import com.weather.model.Session;
-import com.weather.model.User;
 import com.weather.service.SessionService;
 import com.weather.service.UserService;
 import jakarta.servlet.http.Cookie;
@@ -27,8 +26,8 @@ import java.util.UUID;
 public class BaseController extends HttpServlet {
 
     private TemplateEngine templateEngine;
-    protected final SessionService sessionService = new SessionService(new SessionDao());
-    protected final UserService userService = new UserService(new UserDao(), new UserMapper());
+    protected final SessionService sessionService = new SessionService(new SessionDao("postgres"));
+    protected final UserService userService = new UserService(new UserDao("postgres"), new UserMapper());
     protected static final UserMapper USER_MAPPER = new UserMapper();
 
     @Override

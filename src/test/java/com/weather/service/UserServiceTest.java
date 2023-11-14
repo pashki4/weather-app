@@ -8,16 +8,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
+
+    private static final String PASSWORD = "password";
 
     @Mock
     private UserDao userDao;
@@ -28,22 +30,40 @@ class UserServiceTest {
 
     @Test
     void loginSuccess() {
-        User user = new User();
-        user.setId(99L);
-        user.setLogin("login");
-        String password = "password";
-        user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
-        UserDto userDto = UserDto.builder()
-                .id(user.getId())
-                .login(user.getLogin())
-                .build();
+        User user = getUser("login");
+        UserDto userDto = getUserDto("login");
 
-        Mockito.doReturn(Optional.of(user)).when(userDao).getByLoginFetch(user.getLogin());
-        Mockito.doReturn(userDto).when(userMapper).map(user);
-        Optional<UserDto> actualResult = userService.login(user.getLogin(), password);
+        doReturn(Optional.of(user)).when(userDao).getByLoginFetch(user.getLogin());
+        doReturn(userDto).when(userMapper).map(user);
+        Optional<UserDto> actualResult = userService.login(user.getLogin(), PASSWORD);
 
         assertThat(actualResult).isPresent();
         assertThat(actualResult.get().getLogin()).isEqualTo(userDto.login);
+        assertThat(actualResult.get().getId()).isEqualTo(userDto.id);
     }
 
+    private User getUser(String login) {
+        User user = new User();
+        user.setId(99L);
+        user.setLogin(login);
+        user.setPassword(BCrypt.hashpw(PASSWORD, BCrypt.gensalt()));
+        return user;
+    }
+
+    private static UserDto getUserDto(String login) {
+        return UserDto.builder()
+                .id(99L)
+                .login(login)
+                .build();
+    }
+
+    @Test
+    void loginFail() {
+        doReturn(Optional.empty()).when(userDao).getByLoginFetch(any());
+
+        Optional<UserDto> actualResult = userService.login("dummy", "123");
+
+        assertThat(actualResult).isEmpty();
+        verifyNoInteractions(userMapper);
+    }
 }

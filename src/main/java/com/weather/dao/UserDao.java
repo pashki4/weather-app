@@ -12,7 +12,11 @@ import java.util.Optional;
 
 public class UserDao implements IUserDao {
 
-    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("postgres");
+    private final EntityManagerFactory emf;
+
+    public UserDao(String persistenceUnitName) {
+        this.emf = Persistence.createEntityManagerFactory(persistenceUnitName);
+    }
 
     @Override
     public Optional<User> getByIdFetch(Long id) {
