@@ -2,12 +2,10 @@ package com.weather.controller;
 
 import com.weather.dto.UserDto;
 import com.weather.model.Session;
-import com.weather.model.User;
 import com.weather.util.CookiesUtil;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -24,22 +22,19 @@ public class LoginController extends BaseController {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Optional<User> optionalUser = userService.getByLogin(req.getParameter("loginUserName").toLowerCase());
-        if (optionalUser.isPresent()
-            && BCrypt.checkpw(req.getParameter("loginPass"), optionalUser.get().getPassword())) {
-            Long userId = optionalUser.get().getId();
-            sessionService.remove(userId);
-
-            sessionService.saveSession(optionalUser.get());
-            Optional<Session> session = sessionService.getSessionByUserId(userId);
+        String login = req.getParameter("loginUserName").toLowerCase();
+        String pass = req.getParameter("loginPass");
+        Optional<UserDto> user = userService.login(login, pass);
+        if (user.isPresent()) {
+            sessionService.updateSessionByUserId(user.get().getId());
+            Optional<Session> session = sessionService.getSessionByUserId(user.get().getId());
             session.ifPresent(s -> CookiesUtil.addCookie(resp, s));
 
-            UserDto userDto = optionalUser.map(USER_MAPPER::map).orElseThrow();
             if (req.getParameter("name") != null && !req.getParameter("name").isEmpty()) {
                 resp.sendRedirect(req.getContextPath() + "/add" + addParameters(req));
             } else {
-                userService.updateWeatherData(userDto);
-                req.setAttribute("user", userDto);
+                userService.updateWeatherData(user.get());
+                req.setAttribute("user", user.get());
                 processTemplate("authorized", req, resp);
             }
         } else {

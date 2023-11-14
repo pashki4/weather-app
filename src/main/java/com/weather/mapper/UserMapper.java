@@ -12,4 +12,5 @@ public class UserMapper implements Mapper<User, UserDto> {
                 .locations(object.getLocations())
                 .build();
     }
+
 }

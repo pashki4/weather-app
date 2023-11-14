@@ -27,7 +27,7 @@ public class SignupController extends BaseController {
         User user = getUser(req);
         try {
             userService.save(user);
-            sessionService.saveSession(user);
+            sessionService.saveSessionByUserId(user.getId());
             Optional<Session> session = sessionService.getSessionByUserId(user.getId());
             CookiesUtil.addCookie(resp, session.get());
 
