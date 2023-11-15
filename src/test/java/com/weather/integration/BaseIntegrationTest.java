@@ -1,9 +1,12 @@
 package com.weather.integration;
 
+import com.weather.model.Location;
+import com.weather.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -42,5 +45,21 @@ public abstract class BaseIntegrationTest {
             Statement statement = connection.createStatement();
             statement.execute(CLEAN_SQL);
         }
+    }
+
+    protected User getUser() {
+        return User.builder()
+                .login("login")
+                .password("userPassword")
+                .build();
+    }
+
+    protected Location getLocation() {
+        return Location.builder()
+                .name("London")
+                .latitude(new BigDecimal("51.5073219"))
+                .longitude(new BigDecimal("-0.1276474"))
+                .country("GB")
+                .build();
     }
 }

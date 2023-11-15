@@ -6,7 +6,6 @@ import com.weather.model.Location;
 import com.weather.model.User;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class UserDaoIT extends BaseIntegrationTest {
 
-    private final UserDao userDao = new UserDao("h2");
+    private final IUserDao userDao = new UserDao("h2");
 
     @Test
     void getByIdFetch() {
@@ -124,21 +123,5 @@ class UserDaoIT extends BaseIntegrationTest {
 
         assertThat(actualResult).isPresent();
         assertThat(actualResult.get().getLocations()).hasSize(0);
-    }
-
-    private static User getUser() {
-        return User.builder()
-                .login("login")
-                .password("userPassword")
-                .build();
-    }
-
-    private Location getLocation() {
-        return Location.builder()
-                .name("London")
-                .latitude(new BigDecimal("51.5073219"))
-                .longitude(new BigDecimal("-0.1276474"))
-                .country("GB")
-                .build();
     }
 }

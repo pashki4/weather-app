@@ -24,8 +24,7 @@ public class SessionDao implements ISessionDao {
         entityManager.getTransaction().begin();
         try {
             Optional<Session> session = entityManager
-                    .createQuery("SELECT s FROM Session s WHERE s.user.id =: id "
-                                 + "ORDER BY s.expiresAt DESC LIMIT 1", Session.class)
+                    .createQuery("SELECT s FROM Session s WHERE s.user.id =: id", Session.class)
                     .setParameter("id", userId)
                     .getResultStream()
                     .findAny();
@@ -33,7 +32,7 @@ public class SessionDao implements ISessionDao {
             return session;
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new SessionDaoException(String.format("Cannot perform getSessionByUserId( %d )", userId), e);
+            throw new SessionDaoException(String.format("Cannot perform getSessionByUserId(%d)", userId), e);
         } finally {
             entityManager.close();
         }
@@ -68,7 +67,7 @@ public class SessionDao implements ISessionDao {
             return Optional.ofNullable(session);
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new SessionDaoException(String.format("Cannot perform getSessionById( %s )", uuid), e);
+            throw new SessionDaoException(String.format("Cannot perform getSessionById(%s)", uuid), e);
         } finally {
             entityManager.close();
         }
@@ -85,7 +84,7 @@ public class SessionDao implements ISessionDao {
             entityManager.getTransaction().commit();
         } catch (RuntimeException e) {
             entityManager.getTransaction().rollback();
-            throw new SessionDaoException(String.format("Error performing dao operation removeByUserId( %d )", userId), e);
+            throw new SessionDaoException(String.format("Error performing dao operation removeByUserId(%d)", userId), e);
         } finally {
             entityManager.close();
         }
