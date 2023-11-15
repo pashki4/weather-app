@@ -32,7 +32,7 @@ public class UserDao implements IUserDao {
             return Optional.ofNullable(user);
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new UserDaoException(String.format("Error performing getByIdFetch( %d )", id), e);
+            throw new UserDaoException(String.format("Error performing getByIdFetch(%d)", id), e);
         } finally {
             entityManager.close();
         }
@@ -68,7 +68,7 @@ public class UserDao implements IUserDao {
             return Optional.ofNullable(user);
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new UserDaoException(String.format("Error performing getByLoginFetch( %s )", login), e);
+            throw new UserDaoException(String.format("Error performing getByLoginFetch(%s)", login), e);
         } finally {
             entityManager.close();
         }
@@ -111,6 +111,8 @@ public class UserDao implements IUserDao {
     }
 
     private Location getLocation(Long locationId) {
-        return new Location(locationId);
+        return Location.builder()
+                .id(locationId)
+                .build();
     }
 }

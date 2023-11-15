@@ -8,10 +8,12 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Setter
 @Getter
-@EqualsAndHashCode(of = {"id"})
+@EqualsAndHashCode(of = {"longitude", "latitude"})
 @ToString(of = "name")
+@Builder
 @Entity
 @Table(name = "locations")
 public class Location {

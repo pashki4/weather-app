@@ -12,6 +12,8 @@ import java.util.List;
 @ToString(of = "login")
 @EqualsAndHashCode(of = "id")
 @Entity
+@AllArgsConstructor
+@Builder
 @Table(name = "users")
 public class User {
     @Id

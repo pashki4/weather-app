@@ -38,7 +38,7 @@ public abstract class BaseIntegrationTest {
 
     @BeforeEach
     void cleanDatabase() throws SQLException {
-        try (Connection connection = DriverManager.getConnection("jdbc:h2:mem:sa;DB_CLOSE_DELAY=-1;", "sa", "")) {
+        try (Connection connection = DriverManager.getConnection(H2_URL, H2_USER, H2_PASS)) {
             Statement statement = connection.createStatement();
             statement.execute(CLEAN_SQL);
         }

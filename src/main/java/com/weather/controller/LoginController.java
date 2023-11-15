@@ -1,6 +1,7 @@
 package com.weather.controller;
 
 import com.weather.dto.UserDto;
+import com.weather.exception.UserDaoException;
 import com.weather.model.Session;
 import com.weather.util.CookiesUtil;
 import jakarta.servlet.annotation.WebServlet;
@@ -24,20 +25,25 @@ public class LoginController extends BaseController {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String login = req.getParameter("loginUserName").toLowerCase();
         String pass = req.getParameter("loginPass");
-        Optional<UserDto> user = userService.login(login, pass);
-        if (user.isPresent()) {
-            sessionService.updateSessionByUserId(user.get().getId());
-            Optional<Session> session = sessionService.getSessionByUserId(user.get().getId());
-            session.ifPresent(s -> CookiesUtil.addCookie(resp, s));
+        try {
+            Optional<UserDto> user = userService.login(login, pass);
+            if (user.isPresent()) {
+                sessionService.updateSessionByUserId(user.get().getId());
+                Optional<Session> session = sessionService.getSessionByUserId(user.get().getId());
+                session.ifPresent(s -> CookiesUtil.addCookie(resp, s));
 
-            if (req.getParameter("name") != null && !req.getParameter("name").isEmpty()) {
-                resp.sendRedirect(req.getContextPath() + "/add" + addParameters(req));
+                if (req.getParameter("name") != null && !req.getParameter("name").isEmpty()) {
+                    resp.sendRedirect(req.getContextPath() + "/add" + addParameters(req));
+                } else {
+                    userService.updateWeatherData(user.get());
+                    req.setAttribute("user", user.get());
+                    processTemplate("authorized", req, resp);
+                }
             } else {
-                userService.updateWeatherData(user.get());
-                req.setAttribute("user", user.get());
-                processTemplate("authorized", req, resp);
+                req.setAttribute("errorMessage", "Wrong credentials");
+                processTemplate("login", req, resp);
             }
-        } else {
+        } catch (UserDaoException e) {
             req.setAttribute("errorMessage", "Wrong credentials");
             processTemplate("login", req, resp);
         }

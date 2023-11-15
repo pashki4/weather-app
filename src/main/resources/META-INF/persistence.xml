@@ -7,7 +7,7 @@
         <!--value="jdbc:h2:mem:tennis_score;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=true;INIT=RUNSCRIPT FROM 'classpath:script/init.sql'"/>-->
 
         <properties>
-            <property name="hibernate.connection.url" value="jdbc:h2:mem:sa;DB_CLOSE_DELAY=-1;"/>
+            <property name="hibernate.connection.url" value="jdbc:h2:mem:sa;DB_CLOSE_DELAY=-1"/>
             <property name="hibernate.connection.driver_class" value="org.h2.Driver"/>
             <property name="hibernate.connection.username" value="sa"/>
             <property name="hibernate.connection.password" value=""/>
