@@ -1,6 +1,8 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE IF NOT EXISTS users
 (
-    id       BIGINT AUTO_INCREMENT,
+    id       BIGSERIAL,
     login    VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     CONSTRAINT users_pk PRIMARY KEY (id),
@@ -9,18 +11,18 @@ CREATE TABLE IF NOT EXISTS users
 
 CREATE TABLE IF NOT EXISTS sessions
 (
-    id         UUID      DEFAULT RANDOM_UUID(),
+    id         UUID      DEFAULT uuid_generate_v4(),
     user_id    BIGINT NOT NULL,
-    expires_at TIMESTAMP DEFAULT NOW() + INTERVAL '1' MINUTE,
+    expires_at TIMESTAMP DEFAULT NOW() + INTERVAL '30 minute',
     CONSTRAINT sessions_pk PRIMARY KEY (id),
     CONSTRAINT sessions_users_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
-CREATE INDEX IF NOT EXISTS idx_expire_at ON sessions (user_id);
+CREATE INDEX idx_user_id ON sessions (user_id);
 
 CREATE TABLE IF NOT EXISTS locations
 (
-    id        BIGINT AUTO_INCREMENT,
+    id        BIGSERIAL,
     name      VARCHAR(255)   NOT NULL,
     user_id   BIGINT         NOT NULL,
     latitude  NUMERIC(9, 7)  NOT NULL,
@@ -31,6 +33,22 @@ CREATE TABLE IF NOT EXISTS locations
 );
 
 INSERT INTO users(login, password)
-VALUES ('user-0', 'password-0');
+VALUES ('user-0', crypt('password', gen_salt('bf')));
 
-SELECT * FROM users;
+INSERT INTO sessions(user_id)
+VALUES (1);
+
+DROP TABLE users;
+DROP TABLE sessions;
+SELECT id
+FROM users
+WHERE login = 'user-0'
+  AND password = crypt('password', password);
+
+SELECT *
+FROM users;
+SELECT *
+FROM sessions;
+DELETE
+FROM users
+WHERE id > 1;

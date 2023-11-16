@@ -24,8 +24,8 @@ public abstract class BaseIntegrationTest {
 
     static {
         try {
-            CREATE_SQL = Files.readString(Path.of("src/test/resources/createTestDb.sql"));
-            CLEAN_SQL = Files.readString(Path.of("src/test/resources/deleteTestDb.sql"));
+            CREATE_SQL = Files.readString(Path.of("src/test/resources/init_h2.sql"));
+            CLEAN_SQL = Files.readString(Path.of("src/test/resources/clean_h2.sql"));
         } catch (IOException e) {
             throw new RuntimeException("Cannot read file: ", e);
         }

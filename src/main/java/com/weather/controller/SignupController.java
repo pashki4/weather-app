@@ -24,8 +24,8 @@ public class SignupController extends BaseController {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        User user = getUser(req);
         try {
+            User user = getUser(req);
             userService.save(user);
             sessionService.saveSessionByUserId(user.getId());
             Optional<Session> session = sessionService.getSessionByUserId(user.getId());
@@ -38,7 +38,7 @@ public class SignupController extends BaseController {
                 req.setAttribute("user", userDto);
                 processTemplate("authorized", req, resp);
             }
-        } catch (UserDaoException e) {
+        } catch (RuntimeException e) {
             req.setAttribute("errorMessage", "Sorry, that login already exists!");
             processTemplate("signup", req, resp);
         }
@@ -47,7 +47,10 @@ public class SignupController extends BaseController {
     private static User getUser(HttpServletRequest req) {
         User user = new User();
         user.setLogin(req.getParameter("signUpUserName"));
-        user.setPassword(BCrypt.hashpw(req.getParameter("signPass"), BCrypt.gensalt()));
+        user.setPassword(req.getParameter("signPass"));
+        if (user.getLogin() == null || user.getPassword() == null) {
+            throw new RuntimeException("Credentials should not be empty");
+        }
         return user;
     }
 

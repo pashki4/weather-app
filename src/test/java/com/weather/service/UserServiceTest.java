@@ -42,6 +42,17 @@ class UserServiceTest {
         assertThat(actualResult.get().getId()).isEqualTo(userDto.id);
     }
 
+    @Test
+    void loginFail() {
+        doReturn(Optional.empty()).when(userDao).getByLoginFetch(any());
+
+        Optional<UserDto> actualResult = userService.login("dummy", "123");
+
+        assertThat(actualResult).isEmpty();
+        verifyNoInteractions(userMapper);
+    }
+
+
     private User getUser(String login) {
         User user = new User();
         user.setId(99L);
@@ -55,15 +66,5 @@ class UserServiceTest {
                 .id(99L)
                 .login(login)
                 .build();
-    }
-
-    @Test
-    void loginFail() {
-        doReturn(Optional.empty()).when(userDao).getByLoginFetch(any());
-
-        Optional<UserDto> actualResult = userService.login("dummy", "123");
-
-        assertThat(actualResult).isEmpty();
-        verifyNoInteractions(userMapper);
     }
 }

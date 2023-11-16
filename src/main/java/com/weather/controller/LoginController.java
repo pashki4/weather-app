@@ -23,9 +23,12 @@ public class LoginController extends BaseController {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String login = req.getParameter("loginUserName").toLowerCase();
+        String login = req.getParameter("loginUserName");
         String pass = req.getParameter("loginPass");
         try {
+            if (login == null || pass == null) {
+                throw new RuntimeException("Credentials should not be empty");
+            }
             Optional<UserDto> user = userService.login(login, pass);
             if (user.isPresent()) {
                 sessionService.updateSessionByUserId(user.get().getId());
@@ -43,8 +46,8 @@ public class LoginController extends BaseController {
                 req.setAttribute("errorMessage", "Wrong credentials");
                 processTemplate("login", req, resp);
             }
-        } catch (UserDaoException e) {
-            req.setAttribute("errorMessage", "Wrong credentials");
+        } catch (RuntimeException e) {
+            req.setAttribute("errorMessage", e.getMessage());
             processTemplate("login", req, resp);
         }
     }

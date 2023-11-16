@@ -27,6 +27,7 @@ public class UserService {
     }
 
     public void save(User user) {
+        user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
         userDAO.save(user);
     }
 
