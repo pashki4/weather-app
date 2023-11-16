@@ -117,11 +117,22 @@ class UserDaoIT extends BaseIntegrationTest {
         Location location = getLocation();
         userDao.save(user);
         userDao.addLocation(user.getId(), location);
-        userDao.removeLocation(user.getId(), location.getId());
 
+        userDao.removeLocation(user.getId(), location.getId());
         Optional<User> actualResult = userDao.getByIdFetch(user.getId());
 
         assertThat(actualResult).isPresent();
         assertThat(actualResult.get().getLocations()).hasSize(0);
+    }
+
+    @Test
+    void shouldNotRemoveLocation() {
+        User user = getUser();
+        Location location = getLocation();
+        userDao.save(user);
+        userDao.addLocation(user.getId(), location);
+
+        assertThatThrownBy(() -> userDao.removeLocation(user.getId(), 99L))
+                .isInstanceOf(UserDaoException.class);
     }
 }
