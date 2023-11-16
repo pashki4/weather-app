@@ -19,8 +19,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    private static final String PASSWORD = "password";
-
     @Mock
     private UserDao userDao;
     @Mock
@@ -30,12 +28,13 @@ class UserServiceTest {
 
     @Test
     void loginSuccess() {
-        User user = getUser("login");
-        UserDto userDto = getUserDto("login");
+        User user = getUser(false);
+        User crypt = getUser(true);
+        UserDto userDto = getUserDto();
 
-        doReturn(Optional.of(user)).when(userDao).getByLoginFetch(user.getLogin());
+        doReturn(Optional.of(crypt)).when(userDao).getByLoginFetch(user.getLogin());
         doReturn(userDto).when(userMapper).map(user);
-        Optional<UserDto> actualResult = userService.login(user.getLogin(), PASSWORD);
+        Optional<UserDto> actualResult = userService.login(user.getLogin(), user.getPassword());
 
         assertThat(actualResult).isPresent();
         assertThat(actualResult.get().getLogin()).isEqualTo(userDto.login);
@@ -52,19 +51,26 @@ class UserServiceTest {
         verifyNoInteractions(userMapper);
     }
 
-
-    private User getUser(String login) {
+    private static User getUser(Boolean cryptPass) {
         User user = new User();
         user.setId(99L);
-        user.setLogin(login);
-        user.setPassword(BCrypt.hashpw(PASSWORD, BCrypt.gensalt()));
+        user.setLogin("login");
+        cryptPassword(cryptPass, user);
         return user;
     }
 
-    private static UserDto getUserDto(String login) {
+    private static void cryptPassword(Boolean crypt, User user) {
+        if (crypt) {
+            user.setPassword(BCrypt.hashpw("password", BCrypt.gensalt()));
+        } else {
+            user.setPassword("password");
+        }
+    }
+
+    private static UserDto getUserDto() {
         return UserDto.builder()
                 .id(99L)
-                .login(login)
+                .login("login")
                 .build();
     }
 }
