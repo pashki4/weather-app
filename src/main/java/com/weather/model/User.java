@@ -12,20 +12,23 @@ import java.util.List;
 @ToString(of = "login")
 @EqualsAndHashCode(of = "id")
 @Entity
+@AllArgsConstructor
+@Builder
 @Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "login")
+    @Column(name = "login", nullable = false, unique = true)
     private String login;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.REMOVE)
     @Setter(AccessLevel.PRIVATE)
+    @Builder.Default
     private List<Location> locations = new ArrayList<>();
 
     public void addLocation(Location location) {

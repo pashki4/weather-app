@@ -8,10 +8,12 @@ import lombok.*;
 import java.math.BigDecimal;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Setter
 @Getter
 @EqualsAndHashCode(of = {"id"})
 @ToString(of = "name")
+@Builder
 @Entity
 @Table(name = "locations")
 public class Location {
@@ -20,6 +22,7 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     @ManyToOne
@@ -27,11 +30,11 @@ public class Location {
     private User user;
 
     @JsonProperty("lat")
-    @Column(precision = 9, scale = 7)
+    @Column(precision = 9, scale = 7, nullable = false)
     private BigDecimal latitude;
 
     @JsonProperty("lon")
-    @Column(precision = 10, scale = 7)
+    @Column(precision = 10, scale = 7, nullable = false)
     private BigDecimal longitude;
 
     @Transient

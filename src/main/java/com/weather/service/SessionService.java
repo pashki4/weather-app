@@ -2,7 +2,6 @@ package com.weather.service;
 
 import com.weather.dao.ISessionDao;
 import com.weather.model.Session;
-import com.weather.model.User;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -23,15 +22,16 @@ public class SessionService {
         return sessionDAO.getSessionById(uuid);
     }
 
-    public void saveSession(User user) {
-        sessionDAO.saveForUser(user);
+    public void saveSessionByUserId(Long id) {
+        sessionDAO.saveByUserId(id);
     }
 
     public boolean isSessionActive(Session session) {
         return LocalDateTime.now().isBefore(session.getExpiresAt());
     }
 
-    public void remove(Long id) {
+    public void updateSessionByUserId(Long id) {
         sessionDAO.removeByUserId(id);
+        sessionDAO.saveByUserId(id);
     }
 }

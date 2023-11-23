@@ -28,9 +28,7 @@ public class WeatherApiService {
     private static final String WEATHER_DATA_URL = "https://api.openweathermap.org/data/2.5/weather";
     private static final String WEATHER_DATA_UNITS = "metric";
     private static final String WEATHER_DATA_LANG = "en";
-
-
-    private static final HttpClient client = HttpClient.newHttpClient();
+    private static final HttpClient CLIENT = HttpClient.newHttpClient();
 
     public static List<Location> findLocation(HttpServletRequest req) throws JsonProcessingException {
         String searchUrl = createSearchLocationUrl(req);
@@ -76,7 +74,7 @@ public class WeatherApiService {
 
     private static HttpResponse<String> sendRequest(HttpRequest request) {
         try {
-            return client.send(request, HttpResponse.BodyHandlers.ofString());
+            return CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Error sending request: " + request, e);
         }

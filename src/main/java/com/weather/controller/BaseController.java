@@ -23,26 +23,31 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
-public class BaseController extends HttpServlet {
+public abstract class BaseController extends HttpServlet {
 
     private TemplateEngine templateEngine;
-    protected final SessionService SESSION_SERVICE = new SessionService(new SessionDao());
-    protected final UserService USER_SERVICE = new UserService(new UserDao());
+    protected final SessionService sessionService = new SessionService(new SessionDao("postgres"));
+    protected final UserService userService = new UserService(new UserDao("postgres"), new UserMapper());
     protected static final UserMapper USER_MAPPER = new UserMapper();
 
     @Override
     public void init() {
         JakartaServletWebApplication application =
                 JakartaServletWebApplication.buildApplication(getServletContext());
+        WebApplicationTemplateResolver templateResolver = getWebApplicationTemplateResolver(application);
+
+        templateEngine = new TemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver);
+    }
+
+    private static WebApplicationTemplateResolver getWebApplicationTemplateResolver(JakartaServletWebApplication application) {
         WebApplicationTemplateResolver templateResolver = new WebApplicationTemplateResolver(application);
         templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setPrefix("/WEB-INF/templates/");
         templateResolver.setSuffix(".html");
         templateResolver.setCharacterEncoding("UTF-8");
         templateResolver.setCacheable(false);
-
-        templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver);
+        return templateResolver;
     }
 
     protected void processTemplate(String template, HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -64,15 +69,15 @@ public class BaseController extends HttpServlet {
 
     protected boolean isSessionActive(HttpServletRequest req) {
         UUID uuid = getCookieId(req);
-        Optional<Session> session = SESSION_SERVICE.getSessionById(uuid);
+        Optional<Session> session = sessionService.getSessionById(uuid);
         return session
-                .map(SESSION_SERVICE::isSessionActive)
+                .map(sessionService::isSessionActive)
                 .orElse(false);
     }
 
     protected Optional<UserDto> getUserBySessionId(HttpServletRequest req) {
         UUID cookieId = getCookieId(req);
-        return SESSION_SERVICE.getSessionById(cookieId)
+        return sessionService.getSessionById(cookieId)
                 .map(Session::getUser)
                 .map(USER_MAPPER::map);
     }

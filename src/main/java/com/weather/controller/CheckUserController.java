@@ -14,7 +14,7 @@ public class CheckUserController extends BaseController {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (hasCookie(req) && isSessionActive(req)) {
             Optional<UserDto> user = getUserBySessionId(req);
-            user.ifPresent(USER_SERVICE::updateWeatherData);
+            user.ifPresent(userService::updateWeatherData);
             if (user.isPresent()) {
                 req.setAttribute("user", user.get());
                 processTemplate("authorized", req, resp);

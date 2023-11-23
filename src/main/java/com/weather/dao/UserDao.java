@@ -12,11 +12,15 @@ import java.util.Optional;
 
 public class UserDao implements IUserDao {
 
-    private final EntityManagerFactory EMF = Persistence.createEntityManagerFactory("postgres");
+    private final EntityManagerFactory emf;
+
+    public UserDao(String persistenceUnitName) {
+        this.emf = Persistence.createEntityManagerFactory(persistenceUnitName);
+    }
 
     @Override
     public Optional<User> getByIdFetch(Long id) {
-        EntityManager entityManager = EMF.createEntityManager();
+        EntityManager entityManager = emf.createEntityManager();
         entityManager.unwrap(Session.class).setDefaultReadOnly(true);
         entityManager.getTransaction().begin();
         try {
@@ -28,7 +32,7 @@ public class UserDao implements IUserDao {
             return Optional.ofNullable(user);
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new UserDaoException(String.format("Error performing getByIdFetch( %d )", id), e);
+            throw new UserDaoException(String.format("Error performing getByIdFetch(%d)", id), e);
         } finally {
             entityManager.close();
         }
@@ -36,7 +40,7 @@ public class UserDao implements IUserDao {
 
     @Override
     public void save(User user) {
-        EntityManager entityManager = EMF.createEntityManager();
+        EntityManager entityManager = emf.createEntityManager();
         entityManager.getTransaction().begin();
         try {
             entityManager.persist(user);
@@ -51,7 +55,7 @@ public class UserDao implements IUserDao {
 
     @Override
     public Optional<User> getByLoginFetch(String login) {
-        EntityManager entityManager = EMF.createEntityManager();
+        EntityManager entityManager = emf.createEntityManager();
         entityManager.unwrap(Session.class).setDefaultReadOnly(true);
         entityManager.getTransaction().begin();
         try {
@@ -64,7 +68,7 @@ public class UserDao implements IUserDao {
             return Optional.ofNullable(user);
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new UserDaoException(String.format("Error performing getByLoginFetch( %s )", login), e);
+            throw new UserDaoException(String.format("Error performing getByLoginFetch(%s)", login), e);
         } finally {
             entityManager.close();
         }
@@ -72,7 +76,7 @@ public class UserDao implements IUserDao {
 
     @Override
     public void addLocation(Long id, Location location) {
-        EntityManager entityManager = EMF.createEntityManager();
+        EntityManager entityManager = emf.createEntityManager();
         entityManager.getTransaction().begin();
         try {
             User referenceUser = entityManager.getReference(User.class, id);
@@ -89,7 +93,7 @@ public class UserDao implements IUserDao {
 
     @Override
     public void removeLocation(Long userId, Long locationId) {
-        EntityManager entityManager = EMF.createEntityManager();
+        EntityManager entityManager = emf.createEntityManager();
         Location location = getLocation(locationId);
         entityManager.getTransaction().begin();
         try {
@@ -107,6 +111,8 @@ public class UserDao implements IUserDao {
     }
 
     private Location getLocation(Long locationId) {
-        return new Location(locationId);
+        return Location.builder()
+                .id(locationId)
+                .build();
     }
 }

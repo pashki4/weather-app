@@ -14,10 +14,10 @@ import java.util.UUID;
 @Setter
 @EqualsAndHashCode(of = "id")
 @Entity
-@Table(name = "sessions")
+@Table(name = "sessions", indexes = @Index(name = "idx_user_id", columnList = "user_id"))
 public class Session {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private UUID id;
 

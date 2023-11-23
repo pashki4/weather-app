@@ -5,27 +5,29 @@ import com.weather.dto.UserDto;
 import com.weather.mapper.UserMapper;
 import com.weather.model.Location;
 import com.weather.model.User;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.util.Optional;
 
 public class UserService {
     private final IUserDao userDAO;
-    private final UserMapper userMapper = new UserMapper();
+    private final UserMapper userMapper;
 
-    public UserService(IUserDao userDAO) {
+    public UserService(IUserDao userDAO, UserMapper userMapper) {
         this.userDAO = userDAO;
+        this.userMapper = userMapper;
     }
 
-    public Optional<UserDto> getById(Long id) {
-        return userDAO.getByIdFetch(id)
-                .map(userMapper::map);
-    }
-
-    public Optional<User> getByLogin(String login) {
-        return userDAO.getByLoginFetch(login);
+    public Optional<UserDto> login(String login, String password) {
+        Optional<User> user = userDAO.getByLoginFetch(login);
+        if (user.isPresent() && BCrypt.checkpw(password, user.get().getPassword())) {
+            return user.map(userMapper::map);
+        }
+        return Optional.empty();
     }
 
     public void save(User user) {
+        user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
         userDAO.save(user);
     }
 
