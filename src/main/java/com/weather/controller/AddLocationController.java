@@ -30,9 +30,9 @@ public class AddLocationController extends BaseController {
         } else {
             Optional<UserDto> user = getUserBySessionId(req);
             try {
+                userService.addLocation(user.get().getId(), location);
                 user.ifPresent(u -> u.getLocations().add(location));
                 user.ifPresent(userService::updateWeatherData);
-                userService.addLocation(user.get().getId(), location);
                 req.setAttribute("user", user.get());
                 processTemplate("authorized", req, resp);
             } catch (RuntimeException e) {

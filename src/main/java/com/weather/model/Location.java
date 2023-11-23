@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Setter
 @Getter
-@EqualsAndHashCode(of = {"longitude", "latitude"})
+@EqualsAndHashCode(of = {"id"})
 @ToString(of = "name")
 @Builder
 @Entity

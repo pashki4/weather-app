@@ -18,7 +18,7 @@
     <persistence-unit name="postgres">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <properties>
-            <property name="hibernate.connection.url" value="jdbc:postgresql://postgres:5432/weather_app"/>
+            <property name="hibernate.connection.url" value="jdbc:postgresql://postgres/weather_app"/>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <property name="hibernate.connection.username" value="postgres"/>
             <property name="hibernate.connection.password" value="1234"/>
