@@ -3,7 +3,7 @@ package com.weather.service;
 import com.weather.dao.UserDao;
 import com.weather.dto.UserDto;
 import com.weather.exception.UserDaoException;
-import com.weather.integration.BaseIntegrationTest;
+import com.weather.integration.IntegrationTestBase;
 import com.weather.mapper.UserMapper;
 import com.weather.model.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +14,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class UserServiceIT extends BaseIntegrationTest {
+class UserServiceIT extends IntegrationTestBase {
 
     private UserService userService;
 

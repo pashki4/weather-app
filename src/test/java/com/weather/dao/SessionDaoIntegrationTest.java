@@ -1,7 +1,7 @@
 package com.weather.dao;
 
 import com.weather.exception.SessionDaoException;
-import com.weather.integration.BaseIntegrationTest;
+import com.weather.integration.IntegrationTestBase;
 import com.weather.model.Session;
 import com.weather.model.User;
 import org.assertj.core.api.Assertions;
@@ -12,7 +12,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 
-class SessionDaoIT extends BaseIntegrationTest {
+class SessionDaoIntegrationTest extends IntegrationTestBase {
 
     private final ISessionDao sessionDao = new SessionDao("h2");
     private final IUserDao userDao = new UserDao("h2");

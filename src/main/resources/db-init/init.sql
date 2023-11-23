@@ -1,6 +1,6 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION "uuid-ossp";
 
-CREATE TABLE IF NOT EXISTS users
+CREATE TABLE users
 (
     id       BIGSERIAL,
     login    VARCHAR(255) NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users
     CONSTRAINT users_uq UNIQUE (login)
 );
 
-CREATE TABLE IF NOT EXISTS sessions
+CREATE TABLE sessions
 (
     id         UUID      DEFAULT uuid_generate_v4(),
     user_id    BIGINT NOT NULL,
@@ -18,9 +18,9 @@ CREATE TABLE IF NOT EXISTS sessions
     CONSTRAINT sessions_users_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
-CREATE INDEX idx_user_id ON sessions (user_id);
+CREATE INDEX IF NOT EXISTS idx_user_id ON sessions (user_id);
 
-CREATE TABLE IF NOT EXISTS locations
+CREATE TABLE locations
 (
     id        BIGSERIAL,
     name      VARCHAR(255)   NOT NULL,
@@ -31,24 +31,3 @@ CREATE TABLE IF NOT EXISTS locations
     CONSTRAINT location_uq UNIQUE (latitude, longitude, user_id),
     CONSTRAINT locations_users_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
-
-INSERT INTO users(login, password)
-VALUES ('user-0', crypt('password', gen_salt('bf')));
-
-INSERT INTO sessions(user_id)
-VALUES (1);
-
-DROP TABLE users;
-DROP TABLE sessions;
-SELECT id
-FROM users
-WHERE login = 'user-0'
-  AND password = crypt('password', password);
-
-SELECT *
-FROM users;
-SELECT *
-FROM sessions;
-DELETE
-FROM users
-WHERE id > 1;

@@ -3,14 +3,13 @@
 
     <persistence-unit name="h2">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <!--value="jdbc:h2:mem:tennis_score;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=true;INIT=RUNSCRIPT FROM 'classpath:script/postgres_init.sql'"/>-->
         <properties>
             <property name="hibernate.connection.url" value="jdbc:h2:mem:sa;DB_CLOSE_DELAY=-1"/>
             <property name="hibernate.connection.driver_class" value="org.h2.Driver"/>
             <property name="hibernate.connection.username" value="sa"/>
             <property name="hibernate.connection.password" value=""/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
-            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="validate"/>
         </properties>
@@ -18,14 +17,13 @@
 
     <persistence-unit name="postgres">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-
         <properties>
-            <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/weather_app"/>
+            <property name="hibernate.connection.url" value="jdbc:postgresql://postgres:5432/weather_app"/>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <property name="hibernate.connection.username" value="postgres"/>
             <property name="hibernate.connection.password" value="1234"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
-            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.hbm2ddl.auto" value="validate"/>
         </properties>

@@ -28,6 +28,7 @@ public class User {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.REMOVE)
     @Setter(AccessLevel.PRIVATE)
+    @Builder.Default
     private List<Location> locations = new ArrayList<>();
 
     public void addLocation(Location location) {

@@ -14,7 +14,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public abstract class BaseIntegrationTest {
+public abstract class IntegrationTestBase {
 
     private static final String H2_URL = "jdbc:h2:mem:sa;DB_CLOSE_DELAY=-1;";
     private static final String H2_USER = "sa";

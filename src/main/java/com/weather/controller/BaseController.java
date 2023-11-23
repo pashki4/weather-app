@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
-public class BaseController extends HttpServlet {
+public abstract class BaseController extends HttpServlet {
 
     private TemplateEngine templateEngine;
     protected final SessionService sessionService = new SessionService(new SessionDao("postgres"));
@@ -34,15 +34,20 @@ public class BaseController extends HttpServlet {
     public void init() {
         JakartaServletWebApplication application =
                 JakartaServletWebApplication.buildApplication(getServletContext());
+        WebApplicationTemplateResolver templateResolver = getWebApplicationTemplateResolver(application);
+
+        templateEngine = new TemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver);
+    }
+
+    private static WebApplicationTemplateResolver getWebApplicationTemplateResolver(JakartaServletWebApplication application) {
         WebApplicationTemplateResolver templateResolver = new WebApplicationTemplateResolver(application);
         templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setPrefix("/WEB-INF/templates/");
         templateResolver.setSuffix(".html");
         templateResolver.setCharacterEncoding("UTF-8");
         templateResolver.setCacheable(false);
-
-        templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver);
+        return templateResolver;
     }
 
     protected void processTemplate(String template, HttpServletRequest req, HttpServletResponse resp) throws IOException {

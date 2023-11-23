@@ -1,7 +1,7 @@
 package com.weather.dao;
 
 import com.weather.exception.UserDaoException;
-import com.weather.integration.BaseIntegrationTest;
+import com.weather.integration.IntegrationTestBase;
 import com.weather.model.Location;
 import com.weather.model.User;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class UserDaoIT extends BaseIntegrationTest {
+class UserDaoIntegrationTest extends IntegrationTestBase {
 
     private final IUserDao userDao = new UserDao("h2");
 
