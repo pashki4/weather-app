@@ -3,7 +3,6 @@ Web-app for viewing the current weather.
 User can register and add to collection one or more locations,
 after this main page of the app shows list of locations
 with their current weather.
-***
 
 ## Main goals
 * Use cookies and sessions without any frameworks
